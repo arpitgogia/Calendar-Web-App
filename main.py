@@ -1,3 +1,54 @@
 from flask import Flask, request
 from pymongo import MongoClient
-app = Flask('__name__')
+app = Flask(__name__)
+client = MongoClient()
+db = client.calendar
+event_id = 0
+@app.route('/', methods=['GET'])
+def home():
+    return render_template('hello.html')
+
+@app.route('/create', methods=['POST'])
+def create():
+    data = request.get_json()
+    result = db.events.insert_one({
+        "Name": data['event_name'],
+        "Location": data['location'],
+        "Start": {
+            "Date": data['start_date'],
+            "Time": data['start_time']
+        },
+        "End": {
+            "Date": data['end_date'],
+            "Time": data['end_time']
+        },
+        "All-Day": data['all_day'], 
+        "Description": data['description']
+    })
+
+@app.route('/remove', methods=['POST'])
+def remove():
+    data = request.get_json()
+    result = db.events.delete_many({
+        "Name": data['event_name'],
+        "Location": data['location'],
+        "Start": {
+            "Date": data['start_date'],
+            "Time": data['start_time']
+        },
+        "End": {
+            "Date": data['end_date'],
+            "Time": data['end_time']
+        },
+        "All-Day": data['all_day'],
+    })
+
+
+
+
+
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
