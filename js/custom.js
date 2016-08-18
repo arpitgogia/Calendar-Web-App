@@ -61,9 +61,12 @@ $(document).ready(function() {
         list[i].style.background = '#2ed39e';
         list[i].style.color = '#f8f8f8';
     }
+    // list = document.getElementsByTagName('td');
+    // for(var i = 0 ; i < list.length ; i++) {
+    //     list[i].style.textalign = 'left';
+    // }
+    $('td').css('text-align', 'left');
+    $('td').css('margin-top', '10px');
     $('.fc-day').not('.fc-other-month').click(function(e) {
-        // alert(e.pageX + " : " + e.pageY);
-        // alert($(this).attr("data-date"));
-        // $(this).html("<p>Hello World</p>");
     })
 })
