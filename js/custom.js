@@ -26,7 +26,10 @@ $(document).ready(function() {
         defaultDate: dateString,
         editable: true,
         eventLimit: true,
-        viewRender: markToday // allow "more" link when too many events
+        viewRender: markToday,
+        dayClick: function(date, jsEvent, view) {
+            console.log(date);
+        }
     });
     // $('#mini_calendar').dcalendar();
     $('#left-column').css('height', $(document).height() + "px");
@@ -67,6 +70,11 @@ $(document).ready(function() {
     // }
     $('td').css('text-align', 'left');
     $('td').css('margin-top', '10px');
-    $('.fc-day').not('.fc-other-month').click(function(e) {
-    })
+    // $('.fc-day').not('.fc-other-month').click(function(e) {
+    //     $(this).popover({
+    //         html: 'true',
+    //         placement: 'right',
+    //         content: '<input type="text"></input>'
+    //     })
+    // })
 })
