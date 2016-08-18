@@ -9669,6 +9669,18 @@ function Calendar_constructor(element, overrides) {
 			renderView();
 		}
 	}
+	// function render(inc) {
+	// 	if (!content) {
+	// 		initialRender();
+	// 		trigger('complete', null, true);
+	// 	} else {
+	// 		calcSize();
+	// 		markSizesDirty();
+	// 		markEventsDirty();
+	// 		renderView(inc);
+	// 		trigger('complete', null, true);
+	// 	}
+	// } 
 	
 	
 	function initialRender() {
@@ -10660,7 +10672,7 @@ function Header(calendar) {
 					var button; // the element
 
 					if (buttonName == 'title') {
-						groupChildren = groupChildren.add($('<h2>&nbsp;</h2>')); // we always want it to take up height
+						groupChildren = groupChildren.add($('<h2 style="color: #2bc493">&nbsp;</h2>')); // we always want it to take up height
 						isOnlyButtons = false;
 					}
 					else {
@@ -10713,15 +10725,17 @@ function Header(calendar) {
 							else {
 								innerHtml = htmlEscape(defaultText);
 							}
-
 							classes = [
 								'fc-' + buttonName + '-button',
 								tm + '-button',
 								tm + '-state-default'
 							];
-
+							if(buttonName == 'prev')
+								classes.push('fa-chevron-down');
+							else if(buttonName == 'next')
+								classes.push('fa-chevron-up');
 							button = $( // type="button" so that it doesn't submit a form
-								'<button type="button" class="' + classes.join(' ') + '">' +
+								'<button id=' + buttonName + ' type="button" class="btn btn-flat custom-button fa fa-small ' + classes.join(' ') + '">' +
 									innerHtml +
 								'</button>'
 								)
