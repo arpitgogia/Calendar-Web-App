@@ -2,23 +2,20 @@
 <html lang="en">
     <head> 
         <title>Calendar</title>
-        <link href="css/materialize.css" rel="stylesheet">
         <link href="css/font-awesome.css" rel="stylesheet">
         <link href="css/custom.css" rel="stylesheet">
         <link href="css/fullcalendar.css" rel="stylesheet">
         <link href="css/bootstrap.css" rel="stylesheet">
         <link href="css/mprogress.min.css" rel="stylesheet">
         <style>
-            .modal {
+            @import url(css/font-awesome.css);
+            .modal {    
                 display: none; /* Hidden by default */
-                position: fixed; /* Stay in place */
                 z-index: 1; /* Sit on top */
-                left: 0;
-                top: 0;
-                width: 100%; /* Full width */
-                height: 100%; /* Full height */
+                width: 260px; /* Full width */
+                height: auto; /* Full height */
                 overflow: auto; /* Enable scroll if needed */
-                background-color: rgb(0,0,0, 0); /* Fallback color */
+                background-color: rgba(0,0,0,0); /* Fallback color */
                 /*background-color: rgba(0,0,0,0.4);  Black w/ opacity */
             }
 
@@ -28,7 +25,7 @@
                 margin: 15% auto; /* 15% from the top and centered */
                 padding: 20px;
                 border: 1px solid #888;
-                width: 80%; /* Could be more or less, depending on screen size */
+                width: auto; /* Could be more or less, depending on screen size */
             }
 
             /* The Close Button */
@@ -45,64 +42,119 @@
                 text-decoration: none;
                 cursor: pointer;
             }
+            .btn-flat {
+                filter:progid:DXImageTransform.Microsoft.Gradient(enabled='false');
+                -webkit-box-shadow: none;
+                -moz-box-shadow: none;
+                box-shadow: none;
+                background-image:none;
+                border:0;
+            }
+            input[type=radio],
+            input[type='checkbox'] {
+                display: none;
+            }
+            input[type=radio] + label {
+                display: block;
+            }
+            input[type='checkbox'] + label:before,
+            input[type='radio'] + label:before {
+                display: inline-block;
+                font-family: FontAwesome;
+                font-style: normal;
+                font-weight: normal;
+                line-height: 1;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                padding-right: 8px;
+                width: 23px;
+            }
+            input[type=radio] + label:before {
+                content: "\f10c"; /* Radio Unchecked */
+            }
+            input[type=radio]:checked + label:before {
+                content: "\f05d"; /* Radio Checked */
+            }
+            input[type="checkbox"] + label:before {
+                content: "\f096"; /* Checkbox Unchecked */
+            }
+            input[type="checkbox"]:checked + label:before {
+                content: "\f046"; /* Checkbox Checked */
+            }
+            .radio label,
+            .checkbox label {
+                padding-left: 0;
+            }
+
         </style>
     </head>
     <body>
-        <button id="myBtn">Open Modal</button>
-        <div id="myModal" class="modal">
-            <div class="modal-content">
-                <span class="close">x</span>
-                <p>Some text</p>
-            </div>
+        <div id="modal" class="modal" style="display: none; overflow: auto; padding: 10px; border: solid; border-color: #ff8787; width: 260px; height: 493px">
+            <p>
+                Day of Today
+                <span id="close" style="float: right; color: grey">X</span>
+            </p>
+            <input id="event_name" type="text" style="padding: 5px; margin-bottom: 10px; border: solid 1px; border-color: grey; height: 30px; width: 230px;" placeholder="Event Name">
+            <br>
+            <input id="location" type="text" style="padding: 5px; margin-bottom: 10px; border: solid 1px; border-color: grey; height: 20px; width: 230px;" placeholder="Location">
+            <br>
+            <label for="start_date" style="margin-left: 5px">Starts</label>
+            <br>
+            <input type="date" style="margin-bottom: 10px; border: solid 1px; border-color: grey; width: auto">
+            <input type="time" style="border: solid 1px; border-color: grey; width: auto">
+            <br>
+            <label for="end_date" style="margin-left: 5px">Ends</label>
+            <br>
+            <input type="date" style="border: solid 1px; border-color: grey; width: auto">
+            <input type="time" style="border: solid 1px; border-color: grey; width: auto">
+            <br>
+            <input id="all-day" type="checkbox">
+            <label for="all-day">All-Day</label>
+            <br>
+            <label for="description" style="margin-top: 5px; margin-left: 5px">Description</label>
+            <br>
+            <textarea id="description" type="textarea" cols="26" rows="5" style="border: solid 1px; border-color: grey; resize: none;"></textarea>
+            <br>
+            <input value="Cancel" type="button" style="float: left; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">
+            <input value="Save" type="button" style="margin-right: 2px; background: #ff8787; float: right; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">
         </div>
         <script src="js/jquery-3.1.0.min.js"></script>
+        <script src="js/bootstrap.js"></script>
         <script src="js/moment.min.js"></script>
         <script src="js/jquery.simpleWeather.js"></script>
         <script src="js/materialize.js"></script>
-        <script src="js/mprogress.min.js"></script>
+        <!--<script src="js/mprogress.min.js"></script>-->
         <script src="js/fullcalendar.js"></script>
+        <script src="js/picker.js"></script>
+        <script src="js/picker.date.js"></script>
+        <script src="js/picker.time.js"></script>
+        <!--<script src="js/custom.js"></script>-->
         <script>
-            $(document).ready(function() {
-                var d = new Date();
-                var month = d.getMonth() + 1;
-                if(parseInt(month) < 10) {
-                    var temp = '0';
-                    temp += month;
-                    month = temp;
-                }
-                var date = d.getDate();
-                var year = d.getFullYear();
-                var dateString = year + '-' + month + '-' + date;
-                $('#calendar').fullCalendar({
-                    theme: true,
-                    header: {
-                        left: '',
-                        center: 'next, prev, title',
-                        right: ''    
-                    },
-                    defaultDate: dateString,
-                    editable: true,
-                    eventLimit: true, // allow "more" link when too many events
-                });
-                // $('#mini_calendar').dcalendar();
-            });
-            var modal = document.getElementById('myModal');
-
+            var modal = document.getElementById('modal');
+            console.log(modal);
             // Get the button that opens the modal
             var btn = document.getElementById("myBtn");
 
             // Get the <span> element that closes the modal
-            var span = document.getElementsByClassName("close")[0];
+            var span = document.getElementById("close");
 
             // When the user clicks on the button, open the modal 
-            btn.onclick = function() {
-                modal.style.display = "block";
-            }
+            // document.onclick = function(e) {
+            //     modal.style.top = e.pageX;
+            //     modal.style.left = e.pageY;
+            //     // modal.style.display = "block";
+            //     modal.style.fadeIn = 'slow';
+            // };
+            $('#close').click(function(e) {
+                $('#modal').css({"display": "none"});
+            });
+            $(document).click(function(e) {
+                $('#modal').css({"top":e.pageX});
+                $('#modal').css({"left":e.pageY});
+                $('#modal').css({"display": "block"});
+            });
 
             // When the user clicks on <span> (x), close the modal
-            span.onclick = function() {
-                modal.style.display = "none";
-            }
 
             // When the user clicks anywhere outside of the modal, close it
             window.onclick = function(event) {
@@ -111,6 +163,5 @@
                 }
             }
         </script>
-        <script src="js/custom.js"></script>
     </body>
 </html>
