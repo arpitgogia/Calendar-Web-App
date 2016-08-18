@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head> 
-        <title>SP Calendar WA</title>
+        <title>Calendar</title>
         <link href="css/materialize.css" rel="stylesheet">
         <link href="css/font-awesome.css" rel="stylesheet">
         <link href="css/custom.css" rel="stylesheet">
@@ -32,33 +32,6 @@
         <script src="js/materialize.js"></script>
         <script src="js/mprogress.min.js"></script>
         <script src="js/fullcalendar.js"></script>
-        <script>
-            $(document).ready(function() {
-                var d = new Date();
-                var month = d.getMonth() + 1;
-                if(parseInt(month) < 10) {
-                    var temp = '0';
-                    temp += month;
-                    month = temp;
-                }
-                var date = d.getDate();
-                var year = d.getFullYear();
-                var dateString = year + '-' + month + '-' + date;
-                console.log(dateString);
-                $('#calendar').fullCalendar({
-                    theme: true,
-                    header: {
-                        left: '',
-                        center: 'next, prev, title',
-                        right: ''    
-                    },
-                    defaultDate: dateString,
-                    editable: true,
-                    eventLimit: true, // allow "more" link when too many events
-                });
-                // $('#mini_calendar').dcalendar();
-            });
-        </script>
         <script src="js/custom.js"></script>
     </body>
 </html>

@@ -1,4 +1,34 @@
 $(document).ready(function() {
+    var d = new Date();
+    var month = d.getMonth() + 1;
+    if(parseInt(month) < 10) {
+        var temp = '0';
+        temp += month;
+        month = temp;
+    }
+    var date = d.getDate();
+    var year = d.getFullYear();
+    var dateString = year + '-' + month + '-' + date;
+    var markToday = function() {
+        var list = document.getElementsByClassName('fc-today');
+        for(var i = 0 ; i < list.length ; i++) {
+            list[i].style.background = '#2ed39e';
+            list[i].style.color = '#f8f8f8';
+        }
+    };
+    $('#calendar').fullCalendar({
+        theme: true,
+        header: {
+            left: '',
+            center: 'next, prev, title',
+            right: ''    
+        },
+        defaultDate: dateString,
+        editable: true,
+        eventLimit: true,
+        viewRender: markToday // allow "more" link when too many events
+    });
+    // $('#mini_calendar').dcalendar();
     $('#left-column').css('height', $(document).height() + "px");
     var d = new Date();
     var s = d.toTimeString();
@@ -12,12 +42,10 @@ $(document).ready(function() {
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
             s = JSON.parse(xhttp.responseText);
-            console.log(s.current);
             var condition = s.current.condition;
             var html = "<p class='time'>" + "<img src='" + "http://" + condition.icon.slice(2) + "'>" + s.current.temp_c + String.fromCharCode(176) + "</p>";
             html += "<p class='time' style='font-size:15px'>" + condition.text + "</p>";
             $('#weather').html(html);
-            document.getElementById('loader').style.visibility = 'collapse';
             mProgress.end(true);
         }
     };
@@ -33,12 +61,9 @@ $(document).ready(function() {
         list[i].style.background = '#2ed39e';
         list[i].style.color = '#f8f8f8';
     }
-    $(document).click(function(e) {
-        mouseX = e.pageX;
-        mouseY = e.pageY;
-        console.log(mouseX + " : " + mouseY);
-    });
-    $('.fc-day').click(function(e) {
-        alert(e.pageX + " : " + e.pageY);
+    $('.fc-day').not('.fc-other-month').click(function(e) {
+        // alert(e.pageX + " : " + e.pageY);
+        // alert($(this).attr("data-date"));
+        // $(this).html("<p>Hello World</p>");
     })
 })
