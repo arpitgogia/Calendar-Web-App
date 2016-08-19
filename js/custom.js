@@ -29,11 +29,15 @@ $(document).ready(function() {
         viewRender: markToday,
         dayClick: function(date, jsEvent, view) {
             console.log(date);
-            $(this).popover({
-                html: 'true',
-                content: '<strong>Hello World!</strong>',
-                placement: 'right'
-            });
+            // $(this).popover({
+            //     html: 'true',
+            //     content: $('#modal').html(),
+            //     placement: 'right'
+            // });
+            $(this).webuiPopover({
+                type: 'html',
+                content: '#modal'
+            })
         }
     });
     // $('#mini_calendar').dcalendar();

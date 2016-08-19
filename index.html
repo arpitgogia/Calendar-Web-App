@@ -7,6 +7,7 @@
         <link href="css/fullcalendar.css" rel="stylesheet">
         <link href="css/bootstrap.css" rel="stylesheet">
         <link href="css/mprogress.min.css" rel="stylesheet">
+        <link href="css/jquery.webui-popover.js" rel="stylesheet">
     </head>
     <body>
         <div id="event_add_modal">
@@ -27,7 +28,37 @@
                 <div id="calendar" style="max-width: 1070px;"></div>
             </div>
         </div>
+        <div id="modal" class="modal" style="overflow: auto; padding: 10px; border: solid; border-color: #ff8787; width: 260px; height: auto">
+            <p>
+                Day of Today
+                <span id="close" style="float: right; color: grey">X</span>
+            </p>
+            <input id="event_name" type="text" style="padding: 5px; margin-bottom: 10px; border: solid 1px; border-color: grey; height: 30px; width: 230px;" placeholder="Event Name">
+            <br>
+            <input id="location" type="text" style="padding: 5px; margin-bottom: 10px; border: solid 1px; border-color: grey; height: 20px; width: 230px;" placeholder="Location">
+            <br>
+            <label for="start_date" style="margin-left: 5px">Starts</label>
+            <br>
+            <input type="date" style="margin-bottom: 10px; border: solid 1px; border-color: grey; width: auto">
+            <input type="time" style="border: solid 1px; border-color: grey; width: auto">
+            <br>
+            <label for="end_date" style="margin-left: 5px">Ends</label>
+            <br>
+            <input type="date" style="border: solid 1px; border-color: grey; width: auto">
+            <input type="time" style="border: solid 1px; border-color: grey; width: auto">
+            <br>
+            <input id="all-day" type="checkbox">
+            <label for="all-day">All-Day</label>
+            <br>
+            <label for="description" style="margin-top: 5px; margin-left: 5px">Description</label>
+            <br>
+            <textarea id="description" type="textarea" cols="26" rows="5" style="border: solid 1px; border-color: grey; resize: none;"></textarea>
+            <br>
+            <input value="Cancel" type="button" style="float: left; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">
+            <input value="Save" type="button" style="margin-right: 2px; background: #ff8787; float: right; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">
+        </div>
         <script src="js/jquery-3.1.0.min.js"></script>
+        <script src="js/jquery.webui-popover.js"></script>
         <script src="js/bootstrap.js"></script>
         <script src="js/moment.min.js"></script>
         <script src="js/jquery.simpleWeather.js"></script>
