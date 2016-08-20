@@ -1,4 +1,9 @@
 $(document).ready(function() {
+    console.log('Begin10');
+    var event_count = localStorage.getItem('calendar_event_count');
+    if(event_count == null)
+        event_count = 0;
+
     var d = new Date();
     var month = d.getMonth() + 1;
     
@@ -11,7 +16,7 @@ $(document).ready(function() {
     var date = d.getDate();
     var year = d.getFullYear();
     var dateString = year + '-' + month + '-' + date;
-    function formatDate(now) {
+    var formatDate = function(now) {
             var tzo = -now.getTimezoneOffset();
             var dif = tzo >= 0 ? '+' : '-';
             var pad = function(num) {
@@ -26,7 +31,7 @@ $(document).ready(function() {
             + ':' + pad(now.getSeconds()) 
             + dif + pad(tzo / 60) 
             + ':' + pad(tzo % 60);
-    }
+    };
     //Triggered on each render of the month view, displays the current day in the desired color.
     var markToday = function() {
         var list = document.getElementsByClassName('fc-today');
@@ -138,18 +143,16 @@ $(document).ready(function() {
         var location = $(this).parent().find('#location').val();
         var start_date = $(this).parent().find('#start_date').val();
         var start_time = $(this).parent().find('#start_time').val();
-        // console.log(start_date + " : " + start_time);
         var end_date = $(this).parent().find('#end_date').val();
         var end_time = $(this).parent().find('#end_time').val();
-        // console.log(end_date + " : " + end_time);
+        
         start_date = new Date(start_date.slice(0, 4), (parseInt(start_date.slice(5, 7)) - 1).toString(), start_date.slice(8), start_time.slice(0, 2), 
                     start_time.slice(3));
         console.log(start_date);
         end_date = new Date(end_date.slice(0, 4), (parseInt(end_date.slice(5, 7)) - 1).toString(), end_date.slice(8), end_time.slice(0, 2), 
                     end_time.slice(3));
         console.log(end_date);
-        // start_date = start_date.toISOString();
-        // end_date = end_date.toISOString();
+
         start_date = formatDate(start_date);
         end_date = formatDate(end_date);
         console.log(start_date);
@@ -163,8 +166,56 @@ $(document).ready(function() {
             start: start_date,
             end: end_date,
             description: description,
-            location: location
+            location: location,
+            event_id: event_count
         };
-        $('#calendar').fullCalendar('renderEvent', event, true);
+
+        // $.post(
+        //     "/create",
+        //     JSON.stringify({
+        //         "event_name": event_name,
+        //         "location": location,
+        //         "start_date": start_date,
+        //         "end_date": end_date,
+        //         "all_day": false,
+        //         "description": description,
+        //         "event_id": event_count
+        //     }),
+        //     function(data) {
+        //         console.log(data);
+        //         if(data.Status == 'OK') {
+        //             $('#calendar').fullCalendar('renderEvent', event, true);
+        //             event_count += 1;
+        //             localStorage.setItem('calendar_event_count', event_count);
+        //         } else {
+        //             alert(data.Message);
+        //         }
+        //     }
+        // )
+        var data = {
+                event_name: event_name,
+                location: location,
+                start_date: start_date,
+                end_date: end_date,
+                all_day: false,
+                description: description,
+                event_id: event_count
+            };
+        xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                data = JSON.parse(xhttp.responseText);
+                if(data.Status == 'OK') {
+                    $('#calendar').fullCalendar('renderEvent', event, true);
+                    event_count += 1;
+                    localStorage.setItem('calendar_event_count', event_count);
+                } else {
+                    alert(data.Message);
+                }
+            }
+        };
+        xhttp.open('POST', '/create');
+        xhttp.setRequestHeader('Content-Type', 'application/json');
+        xhttp.send(JSON.stringify(data));
     });
 });
