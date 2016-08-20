@@ -29,7 +29,7 @@ $(document).ready(function() {
             title: date,
             type: 'html',
             position: 'right',
-            content: $('#modal').html(),
+            content: $('#modal_add').html(),
             animation: 'fade',
             closeable: true,
             onShow: function() {
@@ -39,6 +39,31 @@ $(document).ready(function() {
             }
         });
     };
+
+    var eventClickEvent = function(event, jsEvent, view) {
+        var modal_content = [
+            '<strong><span style="color: #b3b3b3">Where</span></strong>',
+            '<br><strong><p id="label_location" style="margin-bottom: 2px; color: #777777">' + event.location + '</p></strong>',
+            '<br><strong><span style="color: #b3b3b3">When</span></strong>',
+            '<br><strong><p id="label_time" style="margin-bottom: 2px; color: #777777">' + event.start_date + '</p></strong>',
+            '<br><strong><span id="label_description" style="color: #b3b3b3">Description</label></strong>',
+            '<br><strong><p id="label_description" style="margin-bottom: 2px; color: #777777">' + event.description + '</p></strong>',
+            '</div>'];
+        console.log(modal_content.join());
+        $(this).webuiPopover({
+            title: event.title,
+            type: 'html',
+            position: 'right',
+            content: modal_content.join(),
+            closeable: true,
+            onShow: function() {
+                list = document.getElementsByClassName('webui-popover');
+                for(var i = 0 ; i < list.length ; i++)
+                    list[i].style.borderColor = '#ff8787';
+            }
+        });
+    };
+
     //Initialize the calendar
     $('#calendar').fullCalendar({
         theme: true,
@@ -51,7 +76,8 @@ $(document).ready(function() {
         editable: true,
         eventLimit: true,
         viewRender: markToday,
-        dayClick: dayClickEvent
+        dayClick: dayClickEvent,
+        eventClick: eventClickEvent
     });
     
     //Adjusting the height of the left column.
@@ -112,7 +138,9 @@ $(document).ready(function() {
             title: event_name,
             allDay: false,
             start: start_date,
-            end: end_date
+            end: end_date,
+            description: description,
+            location: location
         };
         console.log(event);
         $('#calendar').fullCalendar('renderEvent', event, true);

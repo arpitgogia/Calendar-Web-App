@@ -7,116 +7,20 @@
         <link href="css/fullcalendar.css" rel="stylesheet">
         <link href="css/bootstrap.css" rel="stylesheet">
         <link href="css/mprogress.min.css" rel="stylesheet">
-        <style>
-            @import url(css/font-awesome.css);
-            .modal {    
-                display: none; /* Hidden by default */
-                z-index: 1; /* Sit on top */
-                width: 260px; /* Full width */
-                height: auto; /* Full height */
-                overflow: auto; /* Enable scroll if needed */
-                background-color: rgba(0,0,0,0); /* Fallback color */
-                /*background-color: rgba(0,0,0,0.4);  Black w/ opacity */
-            }
-
-            /* Modal Content/Box */
-            .modal-content {
-                background-color: #fefefe;
-                margin: 15% auto; /* 15% from the top and centered */
-                padding: 20px;
-                border: 1px solid #888;
-                width: auto; /* Could be more or less, depending on screen size */
-            }
-
-            /* The Close Button */
-            .close {
-                color: #aaa;
-                float: right;
-                font-size: 28px;
-                font-weight: bold;
-            }
-
-            .close:hover,
-            .close:focus {
-                color: black;
-                text-decoration: none;
-                cursor: pointer;
-            }
-            .btn-flat {
-                filter:progid:DXImageTransform.Microsoft.Gradient(enabled='false');
-                -webkit-box-shadow: none;
-                -moz-box-shadow: none;
-                box-shadow: none;
-                background-image:none;
-                border:0;
-            }
-            input[type=radio],
-            input[type='checkbox'] {
-                display: none;
-            }
-            input[type=radio] + label {
-                display: block;
-            }
-            input[type='checkbox'] + label:before,
-            input[type='radio'] + label:before {
-                display: inline-block;
-                font-family: FontAwesome;
-                font-style: normal;
-                font-weight: normal;
-                line-height: 1;
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
-                padding-right: 8px;
-                width: 23px;
-            }
-            input[type=radio] + label:before {
-                content: "\f10c"; /* Radio Unchecked */
-            }
-            input[type=radio]:checked + label:before {
-                content: "\f05d"; /* Radio Checked */
-            }
-            input[type="checkbox"] + label:before {
-                content: "\f096"; /* Checkbox Unchecked */
-            }
-            input[type="checkbox"]:checked + label:before {
-                content: "\f046"; /* Checkbox Checked */
-            }
-            .radio label,
-            .checkbox label {
-                padding-left: 0;
-            }
-
-        </style>
     </head>
     <body>
-        <div id="modal" class="modal" style="display: none; overflow: auto; padding: 10px; border: solid; border-color: #ff8787; width: 260px; height: 493px">
-            <p>
-                Day of Today
-                <span id="close" style="float: right; color: grey">X</span>
-            </p>
-            <input id="event_name" type="text" style="padding: 5px; margin-bottom: 10px; border: solid 1px; border-color: grey; height: 30px; width: 230px;" placeholder="Event Name">
+        <div id="modal" class="modal" style="display: block; overflow: auto; padding: 10px; border: solid; border-color: #ff8787; width: 260px; height: auto">
+            <strong><span style="color: #b3b3b3">Where</span></strong>
             <br>
-            <input id="location" type="text" style="padding: 5px; margin-bottom: 10px; border: solid 1px; border-color: grey; height: 20px; width: 230px;" placeholder="Location">
+            <strong><p id="label_location" style="margin-bottom: 2px; color: #777777">Location of the Event</p></strong>
             <br>
-            <label for="start_date" style="margin-left: 5px">Starts</label>
+            <strong><span style="color: #b3b3b3">When</span></strong>
             <br>
-            <input type="date" style="margin-bottom: 10px; border: solid 1px; border-color: grey; width: auto">
-            <input type="time" style="border: solid 1px; border-color: grey; width: auto">
+            <strong><p id="label_time" style="margin-bottom: 2px; color: #777777">Time of the Event</p></strong>
             <br>
-            <label for="end_date" style="margin-left: 5px">Ends</label>
+            <strong><span id="label_description" style="color: #b3b3b3">Description</label></strong>
             <br>
-            <input type="date" style="border: solid 1px; border-color: grey; width: auto">
-            <input type="time" style="border: solid 1px; border-color: grey; width: auto">
-            <br>
-            <input id="all-day" type="checkbox">
-            <label for="all-day">All-Day</label>
-            <br>
-            <label for="description" style="margin-top: 5px; margin-left: 5px">Description</label>
-            <br>
-            <textarea id="description" type="textarea" cols="26" rows="5" style="border: solid 1px; border-color: grey; resize: none;"></textarea>
-            <br>
-            <input value="Cancel" type="button" style="float: left; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">
-            <input value="Save" type="button" style="margin-right: 2px; background: #ff8787; float: right; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">
+            <strong><p id="label_description" style="margin-bottom: 2px; color: #777777">Description for the Event</p></strong>
         </div>
         <script src="js/jquery-3.1.0.min.js"></script>
         <script src="js/bootstrap.js"></script>
