@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, Response, make_response
 from pymongo import MongoClient
 import json
 app = Flask(__name__)
@@ -11,7 +11,14 @@ def home():
 
 @app.route('/get_events', methods=['GET'])
 def get_events():
-    
+    data = db.events.find({}, {"_id":0})
+    # s = json.loads(data)
+    result = []
+    for d in data:
+        result.append(d)
+    resp = Response(json.dumps(result), mimetype='application/json')
+    resp.headers.set('Access-Control-Allow-Origin', '*')
+    return resp
 
 @app.route('/create', methods=['POST'])
 def create():
