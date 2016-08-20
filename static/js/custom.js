@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    console.log('Begin10');
+    console.log('Begin14');
     var event_count = localStorage.getItem('calendar_event_count');
     if(event_count == null)
         event_count = 0;
@@ -84,6 +84,32 @@ $(document).ready(function() {
         });
     };
 
+    var event_list = [];
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if(xhttp.readyState == XMLHttpRequest.DONE && xhttp.status == 200) {
+            console.log("Received");
+            var events = JSON.parse(xhttp.responseText);
+            console.log(events);
+            // if(events.length > 0) {
+            //     for(var i = 0 ; i < events.length ; i++) {
+            //         var event = {
+            //             id: events[i].Event_ID,
+            //             title: events[i].Name,
+            //             start: events[i].Start,
+            //             location: events[i].Location,
+            //             end: events[i].End,
+            //             description: events[i].Description
+            //         }
+            //         console.log(event);
+            //         event_list.push(event);
+            //     }
+            // }
+        }
+    };
+    xhttp.open('GET', '/get_events', true);
+    xhttp.send(null);
+
     //Initialize the calendar
     $('#calendar').fullCalendar({
         theme: true,
@@ -97,7 +123,8 @@ $(document).ready(function() {
         eventLimit: true,
         viewRender: markToday,
         dayClick: dayClickEvent,
-        eventClick: eventClickEvent
+        eventClick: eventClickEvent,
+        events: event_list
     });
     
     //Adjusting the height of the left column.
@@ -108,7 +135,7 @@ $(document).ready(function() {
     var s = d.toTimeString();
     $('#clock').html(s.slice(0, s.indexOf(':') + 3));
     
-    var xhttp = new XMLHttpRequest();
+    xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
             s = JSON.parse(xhttp.responseText);
@@ -170,28 +197,6 @@ $(document).ready(function() {
             event_id: event_count
         };
 
-        // $.post(
-        //     "/create",
-        //     JSON.stringify({
-        //         "event_name": event_name,
-        //         "location": location,
-        //         "start_date": start_date,
-        //         "end_date": end_date,
-        //         "all_day": false,
-        //         "description": description,
-        //         "event_id": event_count
-        //     }),
-        //     function(data) {
-        //         console.log(data);
-        //         if(data.Status == 'OK') {
-        //             $('#calendar').fullCalendar('renderEvent', event, true);
-        //             event_count += 1;
-        //             localStorage.setItem('calendar_event_count', event_count);
-        //         } else {
-        //             alert(data.Message);
-        //         }
-        //     }
-        // )
         var data = {
                 event_name: event_name,
                 location: location,
@@ -199,7 +204,7 @@ $(document).ready(function() {
                 end_date: end_date,
                 all_day: false,
                 description: description,
-                event_id: event_count
+                id: event_count
             };
         xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {

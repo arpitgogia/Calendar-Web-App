@@ -27,7 +27,6 @@ def get_events():
 @app.route('/create', methods=['POST'])
 def create():
     data = request.get_json()
-    print data
     temp = {}
     try:
         # print data['event_name']
@@ -36,9 +35,9 @@ def create():
             "Location": data['location'],
             "Start": data['start_date'],
             "End": data['end_date'],
-            "All-Day": data['all_day'], 
+            "All_Day": data['all_day'], 
             "Description": data['description'],
-            "Event-ID": data['event_id']
+            "Event_ID": data['event_id']
         })
         temp['Status'] = 'OK'
         temp['Message'] = 'Event Added Successfully'
@@ -54,26 +53,47 @@ def create():
 @app.route('/remove', methods=['POST'])
 def remove():
     data = request.get_json()
-    result = db.events.delete_many({
-        "Name": data['event_name'],
-        "Location": data['location'],
-        "Start": {
-            "Date": data['start_date'],
-            "Time": data['start_time']
-        },
-        "End": {
-            "Date": data['end_date'],
-            "Time": data['end_time']
-        },
-        "All-Day": data['all_day'],
-    })
+    temp = {}
+    try:
+        result = db.events.delete_many({
+            "Event_ID": data['event_id']
+        })
+        temp['Status'] = 'OK'
+        temp['Message'] = 'Events Deleted Successfully'
+    except:    
+        temp['Status'] = 'Error'
+        temp['Message'] = str(sys.exc_info()[0]) + ' : ' + str(sys.exc_info()[1])
+        print sys.exc_info[2]
+        # response.append(temp)
+        resp = Response(json.dumps(temp), mimetype='application/json')
+        resp.headers.set('Access-Control-Allow-Origin', '*')
+        return resp
 
-
-
-
-
-
-
+@app.route('/update', methods=['POST'])
+def update():
+    data = request.get_json()
+    temp = {}
+    try:
+        result = db.events.update_many({
+            "Event_ID": data['event_id']
+        }, {
+            "Name": data['event_name'],
+            "Location": data['location'],
+            "Start": data['start_date'],
+            "End": data['end_date'],
+            "All_Day": data['all_day'], 
+            "Description": data['description']
+        })
+        temp['Status'] = 'OK'
+        temp['Message'] = 'Event Updated Successfully'
+    except: 
+        temp['Status'] = 'Error'
+        temp['Message'] = str(sys.exc_info()[0]) + ' : ' + str(sys.exc_info()[1])
+        print sys.exc_info[2]
+    # response.append(temp)
+    resp = Response(json.dumps(temp), mimetype='application/json')
+    resp.headers.set('Access-Control-Allow-Origin', '*')
+    return resp
 
 if __name__ == '__main__':
     app.run(debug=True)
