@@ -128,7 +128,6 @@ $(document).ready(function() {
 
     $(document).on("click", "#save", function() {
         var event_name = $(this).parent().find('#event_name').val();
-        // var event_name = $('.webui-popover #event_name').val();
         var location = $(this).parent().find('#location').val();
         var start_date = $(this).parent().find('#start_date').val() + 'T15:37:48+00:00';
         var end_date = $(this).parent().find('#end_date').val() + 'T15:37:48+00:00';
@@ -144,6 +143,6 @@ $(document).ready(function() {
         };
         console.log(event);
         $('#calendar').fullCalendar('renderEvent', event, true);
-        // console.log(event_name);
+        
     });
 });

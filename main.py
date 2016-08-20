@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
 from pymongo import MongoClient
+import json
 app = Flask(__name__)
 client = MongoClient()
 db = client.calendar
@@ -7,6 +8,10 @@ event_id = 0
 @app.route('/', methods=['GET'])
 def home():
     return render_template('index.html')
+
+@app.route('/get_events', methods=['GET'])
+def get_events():
+    
 
 @app.route('/create', methods=['POST'])
 def create():
@@ -25,6 +30,7 @@ def create():
         "All-Day": data['all_day'], 
         "Description": data['description']
     })
+    return "Success"
 
 @app.route('/remove', methods=['POST'])
 def remove():
