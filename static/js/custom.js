@@ -11,7 +11,22 @@ $(document).ready(function() {
     var date = d.getDate();
     var year = d.getFullYear();
     var dateString = year + '-' + month + '-' + date;
-    
+    function formatDate(now) {
+            var tzo = -now.getTimezoneOffset();
+            var dif = tzo >= 0 ? '+' : '-';
+            var pad = function(num) {
+                var norm = Math.abs(Math.floor(num));
+                return (norm < 10 ? '0' : '') + norm;
+            };
+        return now.getFullYear() 
+            + '-' + pad(now.getMonth()+1)
+            + '-' + pad(now.getDate())
+            + 'T' + pad(now.getHours())
+            + ':' + pad(now.getMinutes()) 
+            + ':' + pad(now.getSeconds()) 
+            + dif + pad(tzo / 60) 
+            + ':' + pad(tzo % 60);
+    }
     //Triggered on each render of the month view, displays the current day in the desired color.
     var markToday = function() {
         var list = document.getElementsByClassName('fc-today');
@@ -88,13 +103,6 @@ $(document).ready(function() {
     var s = d.toTimeString();
     $('#clock').html(s.slice(0, s.indexOf(':') + 3));
     
-    var mProgress = new Mprogress({
-        template: 3,
-        parent: '#progress'
-    });
-    mProgress.start();
-    //Retrieving the weather
-    //TO-DO: Fix weather icons according to specifications
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
@@ -103,7 +111,6 @@ $(document).ready(function() {
             var html = "<p class='time'>" + "<img src='" + "http://" + condition.icon.slice(2) + "'>" + s.current.temp_c + String.fromCharCode(176) + "</p>";
             html += "<p class='time' style='font-size:15px'>" + condition.text + "</p>";
             $('#weather').html(html);
-            mProgress.end(true);
         }
     };
     xhttp.open('GET', "http://api.apixu.com/v1/current.json?key=05fcb9bae03b415baf4145821161708&q=Delhi,IN", true);
@@ -129,10 +136,27 @@ $(document).ready(function() {
     $(document).on("click", "#save", function() {
         var event_name = $(this).parent().find('#event_name').val();
         var location = $(this).parent().find('#location').val();
-        var start_date = $(this).parent().find('#start_date').val() + 'T15:37:48+00:00';
-        var end_date = $(this).parent().find('#end_date').val() + 'T15:37:48+00:00';
+        var start_date = $(this).parent().find('#start_date').val();
+        var start_time = $(this).parent().find('#start_time').val();
+        // console.log(start_date + " : " + start_time);
+        var end_date = $(this).parent().find('#end_date').val();
+        var end_time = $(this).parent().find('#end_time').val();
+        // console.log(end_date + " : " + end_time);
+        start_date = new Date(start_date.slice(0, 4), (parseInt(start_date.slice(5, 7)) - 1).toString(), start_date.slice(8), start_time.slice(0, 2), 
+                    start_time.slice(3));
+        console.log(start_date);
+        end_date = new Date(end_date.slice(0, 4), (parseInt(end_date.slice(5, 7)) - 1).toString(), end_date.slice(8), end_time.slice(0, 2), 
+                    end_time.slice(3));
+        console.log(end_date);
+        // start_date = start_date.toISOString();
+        // end_date = end_date.toISOString();
+        start_date = formatDate(start_date);
+        end_date = formatDate(end_date);
+        console.log(start_date);
+        console.log(end_date);
         var all_day = $(this).parent().find('#all-day').prop('checked');
         var description = $(this).parent().find('#description').val();
+
         var event = {
             title: event_name,
             allDay: false,
@@ -141,8 +165,6 @@ $(document).ready(function() {
             description: description,
             location: location
         };
-        console.log(event);
         $('#calendar').fullCalendar('renderEvent', event, true);
-        
     });
 });
