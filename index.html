@@ -10,6 +10,14 @@
         <link href="css/jquery.webui-popover.css" rel="stylesheet">
     </head>
     <body>
+        <script src="js/jquery-3.1.0.min.js"></script>
+        <script src="js/jquery.webui-popover.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="js/moment.min.js"></script>
+        <script src="js/jquery.simpleWeather.js"></script>
+        <script src="js/mprogress.min.js"></script>
+        <script src="js/fullcalendar.js"></script>
+        <script src="js/custom.js"></script>
         <div id="event_add_modal">
         </div>
         <div class="row">
@@ -35,13 +43,13 @@
             <br>
             <label for="start_date" style="margin-left: 5px">Starts</label>
             <br>
-            <input type="date" style="margin-bottom: 10px; border: solid 1px; border-color: grey; width: auto">
-            <input type="time" style="border: solid 1px; border-color: grey; width: auto">
+            <input id="start_date" type="date" style="margin-bottom: 10px; border: solid 1px; border-color: grey; width: auto">
+            <input id="start_time" type="time" style="border: solid 1px; border-color: grey; width: auto">
             <br>
             <label for="end_date" style="margin-left: 5px">Ends</label>
             <br>
-            <input type="date" style="border: solid 1px; border-color: grey; width: auto">
-            <input type="time" style="border: solid 1px; border-color: grey; width: auto">
+            <input id="end_date" type="date" style="border: solid 1px; border-color: grey; width: auto">
+            <input id="end_time" type="time" style="border: solid 1px; border-color: grey; width: auto">
             <br>
             <input id="all-day" type="checkbox">
             <label for="all-day">All-Day</label>
@@ -50,16 +58,8 @@
             <br>
             <textarea id="description" type="textarea" cols="26" rows="5" style="border: solid 1px; border-color: grey; resize: none;"></textarea>
             <br>
-            <input value="Cancel" type="button" style="border-radius: 2px; float: left; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">
-            <input value="Save" type="button" style="border-radius: 2px; color: white; margin-right: 2px; background: #ff8787; float: right; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">
+            <input id="cancel" value="Cancel" type="button" style="border-radius: 2px; float: left; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">
+            <input id="save" value="Save" type="button" style="border-radius: 2px; color: white; margin-right: 2px; background: #ff8787; float: right; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">
         </div>
-        <script src="js/jquery-3.1.0.min.js"></script>
-        <script src="js/jquery.webui-popover.js"></script>
-        <script src="js/bootstrap.js"></script>
-        <script src="js/moment.min.js"></script>
-        <script src="js/jquery.simpleWeather.js"></script>
-        <script src="js/mprogress.min.js"></script>
-        <script src="js/fullcalendar.js"></script>
-        <script src="js/custom.js"></script>
     </body>
 </html>

@@ -20,6 +20,7 @@ $(document).ready(function() {
             list[i].style.color = '#f8f8f8';
         }
     };
+    
     //Triggered on each click of a day, to display the form for creating an event.
     var dayClickEvent = function(date, jsEvent, view) {
         date = date.format("dddd, D MMMM YYYY");
@@ -96,4 +97,25 @@ $(document).ready(function() {
 
     $('td').css('text-align', 'left');
     $('td').css('margin-top', '10px');
-})
+
+    //Saving an event
+
+    $(document).on("click", "#save", function() {
+        var event_name = $(this).parent().find('#event_name').val();
+        // var event_name = $('.webui-popover #event_name').val();
+        var location = $(this).parent().find('#location').val();
+        var start_date = $(this).parent().find('#start_date').val() + 'T15:37:48+00:00';
+        var end_date = $(this).parent().find('#end_date').val() + 'T15:37:48+00:00';
+        var all_day = $(this).parent().find('#all-day').prop('checked');
+        var description = $(this).parent().find('#description').val();
+        var event = {
+            title: event_name,
+            allDay: false,
+            start: start_date,
+            end: end_date
+        };
+        console.log(event);
+        $('#calendar').fullCalendar('renderEvent', event, true);
+        // console.log(event_name);
+    });
+});
