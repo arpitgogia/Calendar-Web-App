@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <script src="../static/js/jquery-3.1.0.min.js"></script>
+        <!--<script src="../static/js/jquery.webui-popover.js"></script>-->
+        <script src="../static/js/bootstrap.js"></script>
+        <!--<script src="../static/js/moment.min.js"></script>-->
+        <!--<script src="../static/js/jquery.simpleWeather.js"></script>-->
+        <!--<script src="../static/js/mprogress.min.js"></script>-->
+        <!--<script src="../static/js/fullcalendar.js"></script>-->
+        <!--<script src="../static/js/custom.js"></script>-->
+        <script>
+            var modal_content = [
+            '<strong><span style="color: #b3b3b3">Where</span></strong>',
+            '<br><strong><p id="label_location" style="margin-bottom: 2px; color: #777777">' + 'Delhi' + '</p></strong>',
+            '<br><strong><span style="color: #b3b3b3">When</span></strong>',
+            '<br><strong><p id="label_time" style="margin-bottom: 2px; color: #777777">' + 'Wednesday' + '</p></strong>',
+            '<br><strong><span id="label_description" style="color: #b3b3b3">Description</label></strong>',
+            '<br><strong><p id="label_description" style="margin-bottom: 2px; color: #777777">' + 'Test Event' + '</p></strong>',
+            '</div>'];
+            console.log(modal_content.join(""));
+            $(document).ready(function() {
+                console.log('ready');
+                document.getElementById('modal').innerHTML = modal_content.join("");
+            });
+        </script>   
+        <div id="modal">
+        </div>
+    </body>
+</html>
