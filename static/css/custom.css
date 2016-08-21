@@ -30,6 +30,9 @@ input[type="checkbox"] + label:before {
 input[type="checkbox"]:checked + label:before {
     content: "\f046"; /* Checkbox Checked */
 }
+input[type='button'] {
+    font-family: FontAwesome;
+}
 .radio label,
 .checkbox label {
     padding-left: 0;

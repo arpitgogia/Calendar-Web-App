@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    console.log('Begin57');
+    console.log('Begin75');
     var event_count = localStorage.getItem('calendar_event_count');
     if(event_count == null)
         event_count = 0;
@@ -11,6 +11,9 @@ $(document).ready(function() {
         var temp = '0';
         temp += month;
         month = temp;
+    }
+    var test = function() {
+        console.log('Hello World');
     }
     var day_ref = {
         0: 'sun',
@@ -69,6 +72,7 @@ $(document).ready(function() {
             content: $('#modal_add').html(),
             animation: 'fade',
             closeable: true,
+            cache: false,
             onShow: function() {
                 list = document.getElementsByClassName('webui-popover');
                 for(var i = 0 ; i < list.length ; i++)
@@ -158,7 +162,8 @@ $(document).ready(function() {
     var d = new Date();
     var s = d.toTimeString();
     $('#clock').html(s.slice(0, s.indexOf(':') + 3));
-    
+    // $('.fc-right').html('<i id="sync" class="fa fa-refresh" onclick="test" colour="#2bc493"></i>');
+    // $('.fc-right').html('<i id="refresh" onclick="formatDate" class="fa fa-refresh"></i>');
     var xhttp2 = new XMLHttpRequest();
     xhttp2.onreadystatechange = function() {
         if (xhttp2.readyState == 4 && xhttp2.status == 200) {
@@ -236,6 +241,7 @@ $(document).ready(function() {
                     $('#calendar').fullCalendar('renderEvent', event, true);
                     event_count = parseInt(event_count) + 1;
                     localStorage.setItem('calendar_event_count', event_count);
+                    WebuiPopovers.hideAll();
                 } else {
                     alert(data.Message);
                 }
@@ -260,14 +266,16 @@ $(document).ready(function() {
                 data3 = JSON.parse(xhttp4.responseText);
                 if(data3.Status == 'OK') {
                     $('#calendar').fullCalendar('removeEvents', e_id);
+                    WebuiPopovers.hideAll();
                 } else {
                     alert(data3.Message);
                 }
-                // console.log(data3.toString());
             }
         }
         xhttp4.open('POST', '/remove');
         xhttp4.setRequestHeader('Content-Type', 'application/json');
         xhttp4.send(JSON.stringify(data2));
     });
+    // document.getElementsByClassName('fc-right')[0].innerHTML = '<p>Hello</p>'
+    // document.getElementsByClassName('fc-right')[0].innerHTML = '<i id="sync" class="fa fa-refresh" onclick="test" colour="#2bc493"></i>';
 });
