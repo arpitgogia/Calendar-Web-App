@@ -55,21 +55,23 @@ def create():
 @app.route('/remove', methods=['POST'])
 def remove():
     data = request.get_json()
+    print str(data)
     temp = {}
     try:
+        print data['id']
         result = db.events.delete_many({
-            "Event_ID": data['event_id']
+            "Event_ID": int(data['id'])
         })
+        print result
         temp['Status'] = 'OK'
         temp['Message'] = 'Events Deleted Successfully'
     except:    
         temp['Status'] = 'Error'
         temp['Message'] = str(sys.exc_info()[0]) + ' : ' + str(sys.exc_info()[1])
-        print sys.exc_info[2]
-        # response.append(temp)
-        resp = Response(json.dumps(temp), mimetype='application/json')
-        resp.headers.set('Access-Control-Allow-Origin', '*')
-        return resp
+    
+    resp = Response(json.dumps(temp), mimetype='application/json')
+    resp.headers.set('Access-Control-Allow-Origin', '*')
+    return resp
 
 @app.route('/update', methods=['POST'])
 def update():
@@ -91,8 +93,7 @@ def update():
     except: 
         temp['Status'] = 'Error'
         temp['Message'] = str(sys.exc_info()[0]) + ' : ' + str(sys.exc_info()[1])
-        print sys.exc_info[2]
-    # response.append(temp)
+        
     resp = Response(json.dumps(temp), mimetype='application/json')
     resp.headers.set('Access-Control-Allow-Origin', '*')
     return resp

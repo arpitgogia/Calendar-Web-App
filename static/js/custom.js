@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    console.log('Begin23');
+    console.log('Begin57');
     var event_count = localStorage.getItem('calendar_event_count');
     if(event_count == null)
         event_count = 0;
@@ -47,12 +47,14 @@ $(document).ready(function() {
         for(var i = 0 ; i < list.length ; i++) {
             list[i].style.background = '#2ed39e';
             list[i].style.color = '#f8f8f8';
-            var day = new Date().getDay();
-            day = day_ref[day];
-            var class_name = 'fc-' + day;
-            var list2 = document.getElementsByClassName(class_name);
-            for(var j = 0 ; j < list2.length ; j++)
-                list2[i].style.background = 'rgba(0, 0, 0, 0.15)';
+            // var day = new Date().getDay();
+            // day = day_ref[day];
+            // class_name = 'fc-day-header ';
+            // class_name += ('fc-' + day);
+            // console.log(class_name);
+            // var list2 = document.getElementsByClassName(class_name);
+            // for(var j = 0 ; j < list2.length ; j++)
+            //     list2[i].style.background = 'rgba(0, 0, 0, 0.15)';
         }
     };
     
@@ -76,17 +78,23 @@ $(document).ready(function() {
     };
 
     var eventClickEvent = function(event, jsEvent, view) {
+        start = new Date(event.start);
+        console.log(start);
+        if(event.description.length == 0)
+            event.description = " ";
         var modal_content = [
             '<strong><span style="color: #b3b3b3">Where</span></strong>',
             '<br><strong><p id="label_location" style="margin-bottom: 2px; color: #777777">' + event.location + '</p></strong>',
             '<br><strong><span style="color: #b3b3b3">When</span></strong>',
-            '<br><strong><p id="label_time" style="margin-bottom: 2px; color: #777777">' + event.start + '</p></strong>',
+            '<br><strong><p id="label_time" style="margin-bottom: 2px; color: #777777">' + start.toString() + '</p></strong>',
             '<br><strong><span id="label_description" style="color: #b3b3b3">Description</label></strong>',
             '<br><strong><p id="label_description" style="margin-bottom: 2px; color: #777777">' + event.description + '</p></strong>',
-            '</div>'];
-        console.log(modal_content.join());
+            '<input id="delete" value="Delete" type="button" style="margin-top: 20px; border-radius: 2px; float: left; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">',
+            '<input id="edit" value="Edit" type="button" style="margin-top: 20px; border-radius: 2px; color: white; margin-right: 2px; background: #ff8787; float: right; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">',
+            '<p id="event_id" style="color: white">' + event.id + '</span>',    
+            ];
         $(this).webuiPopover({
-            title: event.title,
+            title: '<span style="color: #ff8787">' + event.title + '</span>',
             type: 'html',
             position: 'right',
             content: modal_content.join(""),
@@ -103,7 +111,6 @@ $(document).ready(function() {
     var event_list = [];
     var xhttp1 = new XMLHttpRequest();
     xhttp1.onreadystatechange = function() {
-        console.log(xhttp1);
         if (xhttp1.readyState == 4 && xhttp1.status == 200) {
             events = JSON.parse(xhttp1.responseText);
             if(events.length > 0) {
@@ -119,7 +126,10 @@ $(document).ready(function() {
                     event_list.push(event);
                 }
             }
-            // console.log(event_list.toString());
+            if(event_list.length == 0) {
+                localStorage.setItem('calendar_event_count', 0);
+                event_count = 0;
+            }
             $('#calendar').fullCalendar({
                 theme: true,
                 header: {
@@ -149,18 +159,18 @@ $(document).ready(function() {
     var s = d.toTimeString();
     $('#clock').html(s.slice(0, s.indexOf(':') + 3));
     
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (xhttp.readyState == 4 && xhttp.status == 200) {
-            s = JSON.parse(xhttp.responseText);
+    var xhttp2 = new XMLHttpRequest();
+    xhttp2.onreadystatechange = function() {
+        if (xhttp2.readyState == 4 && xhttp2.status == 200) {
+            s = JSON.parse(xhttp2.responseText);
             var condition = s.current.condition;
             var html = "<p class='time'>" + "<img src='" + "http://" + condition.icon.slice(2) + "'>" + s.current.temp_c + String.fromCharCode(176) + "</p>";
             html += "<p class='time' style='font-size:15px'>" + condition.text + "</p>";
             $('#weather').html(html);
         }
     };
-    xhttp.open('GET', "http://api.apixu.com/v1/current.json?key=05fcb9bae03b415baf4145821161708&q=Delhi,IN", true);
-    xhttp.send();
+    xhttp2.open('GET', "http://api.apixu.com/v1/current.json?key=05fcb9bae03b415baf4145821161708&q=Delhi,IN", true);
+    xhttp2.send();
     
     var list = document.getElementsByClassName('fc-other-month');
     for(var i = 0 ; i < list.length ; i++) {
@@ -175,9 +185,10 @@ $(document).ready(function() {
     }
 
     $('td').css('text-align', 'left');
-    $('td').css('margin-top', '10px');
+    list = document.getElementsByTagName('td');
 
     //Saving an event
+
 
     $(document).on("click", "#save", function() {
         var event_name = $(this).parent().find('#event_name').val();
@@ -189,15 +200,12 @@ $(document).ready(function() {
         
         start_date = new Date(start_date.slice(0, 4), (parseInt(start_date.slice(5, 7)) - 1).toString(), start_date.slice(8), start_time.slice(0, 2), 
                     start_time.slice(3));
-        console.log(start_date);
         end_date = new Date(end_date.slice(0, 4), (parseInt(end_date.slice(5, 7)) - 1).toString(), end_date.slice(8), end_time.slice(0, 2), 
                     end_time.slice(3));
-        console.log(end_date);
 
         start_date = formatDate(start_date);
         end_date = formatDate(end_date);
-        console.log(start_date);
-        console.log(end_date);
+
         var all_day = $(this).parent().find('#all-day').prop('checked');
         var description = $(this).parent().find('#description').val();
 
@@ -220,21 +228,46 @@ $(document).ready(function() {
                 description: description,
                 id: event_count
             };
-        xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (xhttp.readyState == 4 && xhttp.status == 200) {
-                data = JSON.parse(xhttp.responseText);
+        xhttp3 = new XMLHttpRequest();
+        xhttp3.onreadystatechange = function() {
+            if (xhttp3.readyState == 4 && xhttp3.status == 200) {
+                data = JSON.parse(xhttp3.responseText);
                 if(data.Status == 'OK') {
                     $('#calendar').fullCalendar('renderEvent', event, true);
-                    event_count += 1;
+                    event_count = parseInt(event_count) + 1;
                     localStorage.setItem('calendar_event_count', event_count);
                 } else {
                     alert(data.Message);
                 }
             }
         };
-        xhttp.open('POST', '/create');
-        xhttp.setRequestHeader('Content-Type', 'application/json');
-        xhttp.send(JSON.stringify(data));
+        xhttp3.open('POST', '/create');
+        xhttp3.setRequestHeader('Content-Type', 'application/json');
+        xhttp3.send(JSON.stringify(data));
+    });
+
+
+    $(document).on("click", "#delete", function() {
+        var e_id = parseInt($(this).parent().find('#event_id').html());
+        console.log(e_id);
+        var data2 = {
+            id: e_id
+        };
+        xhttp4 = new XMLHttpRequest();
+        xhttp4.onreadystatechange = function() {
+            if(xhttp4.readyState == 4 && xhttp4.status == 200) {
+                console.log(xhttp4.responseText)
+                data3 = JSON.parse(xhttp4.responseText);
+                if(data3.Status == 'OK') {
+                    $('#calendar').fullCalendar('removeEvents', e_id);
+                } else {
+                    alert(data3.Message);
+                }
+                // console.log(data3.toString());
+            }
+        }
+        xhttp4.open('POST', '/remove');
+        xhttp4.setRequestHeader('Content-Type', 'application/json');
+        xhttp4.send(JSON.stringify(data2));
     });
 });
