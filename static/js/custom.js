@@ -314,7 +314,7 @@ $(document).ready(function() {
         loadCalendarApi();
     });
     var CLIENT_ID = '705643443576-1geno5j828oflrhsefln11bl0k0n00g7.apps.googleusercontent.com';
-    var SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
+    var SCOPES = ["https://www.googleapis.com/auth/calendar"];
 
     /**
      * Check if current user has authorized this application.
