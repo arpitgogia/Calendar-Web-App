@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    console.log('Begin75');
+    console.log('alsdjn');
     var event_count = localStorage.getItem('calendar_event_count');
     if(event_count == null)
         event_count = 0;
@@ -12,9 +12,7 @@ $(document).ready(function() {
         temp += month;
         month = temp;
     }
-    var test = function() {
-        console.log('Hello World');
-    }
+
     var day_ref = {
         0: 'sun',
         1: 'mon',
@@ -63,6 +61,8 @@ $(document).ready(function() {
     
     //Triggered on each click of a day, to display the form for creating an event.
     var dayClickEvent = function(date, jsEvent, view) {
+        var temp = date.toDate();
+        // console.log(temp);
         date = date.format("dddd, D MMMM YYYY");
         date = '<span style="color: #ff8787">' + date + '</span>'
         $(this).webuiPopover({
@@ -77,13 +77,13 @@ $(document).ready(function() {
                 list = document.getElementsByClassName('webui-popover');
                 for(var i = 0 ; i < list.length ; i++)
                     list[i].style.borderColor = '#ff8787';
+                // document.getElementById('start_date').value = d.slice(0, d.indexOf('T'));
             }
         });
     };
 
     var eventClickEvent = function(event, jsEvent, view) {
         start = new Date(event.start);
-        console.log(start);
         if(event.description.length == 0)
             event.description = " ";
         var modal_content = [
@@ -194,7 +194,9 @@ $(document).ready(function() {
 
     //Saving an event
 
-
+    $(document).on("click", "#cancel", function() {
+        WebuiPopovers.hideAll();
+    });
     $(document).on("click", "#save", function() {
         var event_name = $(this).parent().find('#event_name').val();
         var location = $(this).parent().find('#location').val();
@@ -216,7 +218,7 @@ $(document).ready(function() {
 
         var event = {
             title: event_name,
-            allDay: false,
+            allDay: all_day,
             start: start_date,
             end: end_date,
             description: description,
