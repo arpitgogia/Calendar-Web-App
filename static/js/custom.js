@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    console.log('Begin14');
+    console.log('Begin21');
     var event_count = localStorage.getItem('calendar_event_count');
     if(event_count == null)
         event_count = 0;
@@ -12,7 +12,15 @@ $(document).ready(function() {
         temp += month;
         month = temp;
     }
-    
+    var day_ref = {
+        0: 'sun',
+        1: 'mon',
+        2: 'tue',
+        3: 'wed',
+        4: 'thu',
+        5: 'fri',
+        6: 'sat',
+    }
     var date = d.getDate();
     var year = d.getFullYear();
     var dateString = year + '-' + month + '-' + date;
@@ -32,12 +40,20 @@ $(document).ready(function() {
             + dif + pad(tzo / 60) 
             + ':' + pad(tzo % 60);
     };
+    
     //Triggered on each render of the month view, displays the current day in the desired color.
     var markToday = function() {
-        var list = document.getElementsByClassName('fc-today');
+        list = document.getElementsByClassName('fc-today');
         for(var i = 0 ; i < list.length ; i++) {
             list[i].style.background = '#2ed39e';
             list[i].style.color = '#f8f8f8';
+            var day = new Date().getDay();
+            day = day_ref[day];
+            var class_name = 'fc-' + day;
+            var list2 = document.getElementsByClassName(class_name);
+            for(var j = 0 ; j < list2.length ; j++) {
+                list2[i].style.background = 'rgba(0, 0, 0, 0.15)';
+            }
         }
     };
     
@@ -74,7 +90,7 @@ $(document).ready(function() {
             title: event.title,
             type: 'html',
             position: 'right',
-            content: modal_content.join(),
+            content: '<strong>EVENT</strong>',
             closeable: true,
             onShow: function() {
                 list = document.getElementsByClassName('webui-popover');
@@ -86,8 +102,14 @@ $(document).ready(function() {
 
     var event_list = [];
     var xhttp = new XMLHttpRequest();
+    // $.get("/get_events", {},
+    //     function (data, textStatus, jqXHR) {
+    //         console.log(JSON.parse(data));
+    //     },
+    //     "application/json"
+    // );
     xhttp.onreadystatechange = function() {
-        if(xhttp.readyState == XMLHttpRequest.DONE && xhttp.status == 200) {
+        if(xhttp.readyState == 1 && xhttp.status == 200) {
             console.log("Received");
             var events = JSON.parse(xhttp.responseText);
             console.log(events);
@@ -194,7 +216,7 @@ $(document).ready(function() {
             end: end_date,
             description: description,
             location: location,
-            event_id: event_count
+            id: event_count
         };
 
         var data = {

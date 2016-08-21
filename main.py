@@ -20,6 +20,8 @@ def get_events():
     if len(result) == 0:
         result = {}
         result['message'] = 'No Events in DB'
+    
+    print json.dumps(result)
     resp = Response(json.dumps(result), mimetype='application/json')
     resp.headers.set('Access-Control-Allow-Origin', '*')
     return resp
@@ -37,14 +39,14 @@ def create():
             "End": data['end_date'],
             "All_Day": data['all_day'], 
             "Description": data['description'],
-            "Event_ID": data['event_id']
+            "Event_ID": data['id']
         })
         temp['Status'] = 'OK'
         temp['Message'] = 'Event Added Successfully'
     except: 
         temp['Status'] = 'Error'
         temp['Message'] = str(sys.exc_info()[0]) + ' : ' + str(sys.exc_info()[1])
-        print sys.exc_info[2]
+        # print str(sys.exc_info[2])
     # response.append(temp)
     resp = Response(json.dumps(temp), mimetype='application/json')
     resp.headers.set('Access-Control-Allow-Origin', '*')
