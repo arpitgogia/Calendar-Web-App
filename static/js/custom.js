@@ -1,4 +1,14 @@
 $(document).ready(function() {
+
+    var w = window.innerWidth
+        || document.documentElement.clientWidth
+        || document.body.clientWidth;
+
+    var h = window.innerHeight
+        || document.documentElement.clientHeight
+        || document.body.clientHeight;
+
+
     console.log('alsdjn');
     var event_count = localStorage.getItem('calendar_event_count');
     if(event_count == null)
@@ -134,6 +144,7 @@ $(document).ready(function() {
                 localStorage.setItem('calendar_event_count', 0);
                 event_count = 0;
             }
+
             $('#calendar').fullCalendar({
                 theme: true,
                 header: {
@@ -141,6 +152,8 @@ $(document).ready(function() {
                     center: 'next, prev, title',
                     right: ''    
                 },
+                height: h,
+                width: w,
                 defaultDate: dateString,
                 editable: true,
                 eventLimit: true,
@@ -156,7 +169,7 @@ $(document).ready(function() {
     xhttp1.send();
     
     //Adjusting the height of the left column.
-    $('#left-column').css('height', $(document).height() + "px");
+    $('#left-column').css('height', h.toString() + "px");
     
     //Creating the clock
     var d = new Date();
