@@ -36,6 +36,7 @@ $(document).ready(function() {
     var date = d.getDate();
     var year = d.getFullYear();
     var dateString = year + '-' + month + '-' + date;
+    
     var formatDate = function(now) {
             var tzo = -now.getTimezoneOffset();
             var dif = tzo >= 0 ? '+' : '-';
@@ -165,15 +166,11 @@ $(document).ready(function() {
     $('#left-column').css('height', h.toString() + "px");
     
     //Creating the clock
-    var d = new Date();
-    var s = d.toTimeString();
-    $('#clock').html(s.slice(0, s.indexOf(':') + 3));
-    var list2 = document.getElementsByClassName('fc-right');
-    for(var i = 0 ; i < list2.length ; i++) {
-        list2[i].innerHTML = '<i id="sync" class="fa fa-refresh" onclick="test" colour="#2bc493"></i>';
-    }
-    // $('.fc-right').html('<i id="sync" class="fa fa-refresh" onclick="test" colour="#2bc493"></i>');
-    // $('.fc-right').html('<i id="refresh" onclick="formatDate" class="fa fa-refresh"></i>');
+    // var d = new Date();
+    var d = moment().format('h:mm a');
+    console.log(d);
+    var html = '<big>' + d.slice(0, 5) + '</big>' + '<small><small><small><small>' + d.slice(5) + '</small></small></small></small>'
+    $('#clock').html(html);
     var xhttp2 = new XMLHttpRequest();
     xhttp2.onreadystatechange = function() {
         if (xhttp2.readyState == 4 && xhttp2.status == 200) {
