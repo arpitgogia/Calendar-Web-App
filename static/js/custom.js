@@ -8,8 +8,9 @@ $(document).ready(function() {
         || document.documentElement.clientHeight
         || document.body.clientHeight;
 
+    
 
-    console.log('alsdjn');
+    console.log('Hello 112201');
     var event_count = localStorage.getItem('calendar_event_count');
     if(event_count == null)
         event_count = 0;
@@ -58,21 +59,13 @@ $(document).ready(function() {
         for(var i = 0 ; i < list.length ; i++) {
             list[i].style.background = '#2ed39e';
             list[i].style.color = '#f8f8f8';
-            // var day = new Date().getDay();
-            // day = day_ref[day];
-            // class_name = 'fc-day-header ';
-            // class_name += ('fc-' + day);
-            // console.log(class_name);
-            // var list2 = document.getElementsByClassName(class_name);
-            // for(var j = 0 ; j < list2.length ; j++)
-            //     list2[i].style.background = 'rgba(0, 0, 0, 0.15)';
         }
     };
     
     //Triggered on each click of a day, to display the form for creating an event.
     var dayClickEvent = function(date, jsEvent, view) {
         var temp = date.toDate();
-        // console.log(temp);
+        console.log(view);
         date = date.format("dddd, D MMMM YYYY");
         date = '<span style="color: #ff8787">' + date + '</span>'
         $(this).webuiPopover({
@@ -150,7 +143,7 @@ $(document).ready(function() {
                 header: {
                     left: '',
                     center: 'next, prev, title',
-                    right: ''    
+                    right: ''
                 },
                 height: h,
                 width: w,
@@ -175,6 +168,10 @@ $(document).ready(function() {
     var d = new Date();
     var s = d.toTimeString();
     $('#clock').html(s.slice(0, s.indexOf(':') + 3));
+    var list2 = document.getElementsByClassName('fc-right');
+    for(var i = 0 ; i < list2.length ; i++) {
+        list2[i].innerHTML = '<i id="sync" class="fa fa-refresh" onclick="test" colour="#2bc493"></i>';
+    }
     // $('.fc-right').html('<i id="sync" class="fa fa-refresh" onclick="test" colour="#2bc493"></i>');
     // $('.fc-right').html('<i id="refresh" onclick="formatDate" class="fa fa-refresh"></i>');
     var xhttp2 = new XMLHttpRequest();
@@ -211,6 +208,13 @@ $(document).ready(function() {
         WebuiPopovers.hideAll();
     });
     $(document).on("click", "#save", function() {
+        // $(this).parent().find('#all-day').change(function() {
+        //     if($(this).is(":checked")) {
+        //         console.log('checked');
+        //     } else {
+        //         console.log('unchecked');
+        //     }
+        // });
         var event_name = $(this).parent().find('#event_name').val();
         var location = $(this).parent().find('#location').val();
         var start_date = $(this).parent().find('#start_date').val();
@@ -244,7 +248,7 @@ $(document).ready(function() {
                 location: location,
                 start_date: start_date,
                 end_date: end_date,
-                all_day: false,
+                all_day: all_day,
                 description: description,
                 id: event_count
             };
@@ -291,6 +295,159 @@ $(document).ready(function() {
         xhttp4.setRequestHeader('Content-Type', 'application/json');
         xhttp4.send(JSON.stringify(data2));
     });
-    // document.getElementsByClassName('fc-right')[0].innerHTML = '<p>Hello</p>'
-    // document.getElementsByClassName('fc-right')[0].innerHTML = '<i id="sync" class="fa fa-refresh" onclick="test" colour="#2bc493"></i>';
+    $(document).on("click", "#settings", function() {
+        $(this).webuiPopover({
+            title: '<span style="color: #ff8787">Sync Google Calendar</span>',
+            type: 'html',
+            position: 'right',
+            content: $("#modal_login").html(),
+            animation: 'fade',
+            closeable: true,
+            onShow: function() {
+                list = document.getElementsByClassName('webui-popover');
+                for(var i = 0 ; i < list.length ; i++)
+                    list[i].style.borderColor = '#ff8787';
+            }
+        });
+    });
+    $(document).on("click", "#auth-button", function(e) {
+        handleAuthClick(e);
+    });
+    $(document).on("click", "#sync", function(e) {
+        loadCalendarApi();
+    });
+    var CLIENT_ID = '705643443576-1geno5j828oflrhsefln11bl0k0n00g7.apps.googleusercontent.com';
+    var SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
+
+    /**
+     * Check if current user has authorized this application.
+     */
+    function checkAuth() {
+        gapi.auth.authorize({
+            'client_id': CLIENT_ID,
+            'scope': SCOPES.join(' '),
+            'immediate': true
+        }, handleAuthResult);
+    };
+
+    /**
+     * Handle response from authorization server.
+     *
+     * @param {Object} authResult Authorization result.
+     */
+    function handleAuthResult(authResult) {
+        // var authorizeDiv = document.getElementById('authorize-div');
+        if (authResult && !authResult.error) {
+            // authorizeDiv.style.display = 'none';
+            localStorage.setItem('AUTHORIZED', true);
+        } else {
+            // authorizeDiv.style.display = 'inline';
+        }
+    }
+
+    /**
+    * Initiate auth flow in response to user clicking authorize button.
+    *
+    * @param {Event} event Button click event.
+    */
+    function handleAuthClick(event) {
+        WebuiPopovers.hideAll();
+        gapi.auth.authorize({
+            client_id: CLIENT_ID, 
+            scope: SCOPES, 
+            immediate: false
+        }, handleAuthResult);
+        return false;
+    }
+
+    /**
+    * Load Google Calendar client library. List upcoming events
+    * once client library is loaded.
+    */
+    function loadCalendarApi() {
+        // console.log(localStorage.getItem('AUTHORIZED'));
+        // if(localStorage.getItem('AUTHORIZED') == true)
+            gapi.client.load('calendar', 'v3', listUpcomingEvents);
+        // else
+            // alert('Not Signed Into Google');
+    }
+
+    /**
+     * Print the summary and start datetime/date of the next ten events in
+     * the authorized user's calendar. If no events are found an
+     * appropriate message is printed.
+     */
+    function listUpcomingEvents() {
+        var request = gapi.client.calendar.events.list({
+            'calendarId': 'primary',
+            'timeMin': (new Date()).toISOString(),
+            'showDeleted': false,
+            'singleEvents': true,
+            'maxResults': 10,
+            'orderBy': 'startTime'
+        });
+
+        request.execute(function(resp) {
+            var events = resp.items;
+            if (events.length > 0) {
+                var event_count = localStorage.getItem('calendar_event_count');
+                if(event_count == null)
+                    event_count = 0;
+                for (i = 0; i < events.length; i++) {
+                    var event = events[i];
+                    var start_date_time = null;
+                    var end_date_time = null;
+                    var all_day = false;
+                    if(event.start.dateTime == undefined)
+                        start_date_time = event.start.date + 'T00:00:00.000+05:30', all_day = true;
+                    else
+                        start_date_time = event.start.dateTime;
+
+                    if(event.end.dateTime == undefined)
+                        end_date_time = event.end.date + 'T00:00:00.000+05:30', all_day = true;
+                    else
+                        end_date_time = event.end.dateTime;
+                        
+                    var local_event = {
+                        start: start_date_time,
+                        end: end_date_time,
+                        location: 'Check Description',
+                        description: '<a href="' + event.htmlLink + '"> Link <i class="fa fa-external-link"></i></a>',
+                        id: event_count,
+                        title: event.summary,
+                        allDay: all_day
+                    };
+                    console.log(local_event);
+                    var data = {
+                        event_name: event.summary,
+                        location: 'Check Description',
+                        start_date: start_date_time,
+                        end_date: end_date_time,
+                        all_day: all_day,
+                        description: '<a href="' + event.htmlLink + '"> Link <i class="fa fa-external-link"></i></a>',
+                        id: event_count
+                    };
+                    xhttp3 = new XMLHttpRequest();
+                    xhttp3.onreadystatechange = function() {
+                        if (xhttp3.readyState == 4 && xhttp3.status == 200) {
+                            data = JSON.parse(xhttp3.responseText);
+                            if(data.Status == 'OK') {
+                                console.log("Successful");
+                                $('#calendar').fullCalendar('renderEvent', local_event, true);
+                                event_count = parseInt(event_count) + 1;
+                                localStorage.setItem('calendar_event_count', event_count);
+                            } else {
+                                alert(data.Message);
+                            }
+                        }
+                    };
+                    xhttp3.open('POST', '/create');
+                    xhttp3.setRequestHeader('Content-Type', 'application/json');
+                    xhttp3.send(JSON.stringify(data));
+                }
+            } else {
+                appendPre('No upcoming events found.');
+            }
+        });
+    }
 });

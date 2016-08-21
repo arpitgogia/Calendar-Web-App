@@ -29,6 +29,7 @@ def get_events():
 @app.route('/create', methods=['POST'])
 def create():
     data = request.get_json()
+    print data
     temp = {}
     try:
         # print data['event_name']
@@ -46,7 +47,7 @@ def create():
     except: 
         temp['Status'] = 'Error'
         temp['Message'] = str(sys.exc_info()[0]) + ' : ' + str(sys.exc_info()[1])
-        # print str(sys.exc_info[2])
+        print temp['Message']
     # response.append(temp)
     resp = Response(json.dumps(temp), mimetype='application/json')
     resp.headers.set('Access-Control-Allow-Origin', '*')
