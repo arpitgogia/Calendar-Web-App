@@ -10,7 +10,7 @@ $(document).ready(function() {
 
     
 
-    console.log('Hello 112201');
+    console.log('Hello 10');
     var event_count = localStorage.getItem('calendar_event_count');
     if(event_count == null)
         event_count = 0;
@@ -90,19 +90,22 @@ $(document).ready(function() {
         start = new Date(event.start);
         if(event.description.length == 0)
             event.description = " ";
+        var button = '';
+        if(event.location == 'Check Description' && event.description.search('Link') != -1)
+            button = 'disabled';
         var modal_content = [
             '<strong><span style="color: #b3b3b3">Where</span></strong>',
             '<br><strong><p id="label_location" style="margin-bottom: 2px; color: #777777">' + event.location + '</p></strong>',
             '<br><strong><span style="color: #b3b3b3">When</span></strong>',
             '<br><strong><p id="label_time" style="margin-bottom: 2px; color: #777777">' + start.toString() + '</p></strong>',
-            '<br><strong><span id="label_description" style="color: #b3b3b3">Description</label></strong>',
+            '<br><strong><span style="color: #b3b3b3">Description</label></strong>',
             '<br><strong><p id="label_description" style="margin-bottom: 2px; color: #777777">' + event.description + '</p></strong>',
             '<input id="delete" value="Delete" type="button" style="margin-top: 20px; border-radius: 2px; float: left; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">',
-            '<input id="edit" value="Edit" type="button" style="margin-top: 20px; border-radius: 2px; color: white; margin-right: 2px; background: #ff8787; float: right; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">',
+            '<input id="edit" ' + button + ' value="Edit" type="button" style="margin-top: 20px; border-radius: 2px; color: white; margin-right: 2px; background: #ff8787; float: right; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">',
             '<p id="event_id" style="color: white">' + event.id + '</span>',    
             ];
         $(this).webuiPopover({
-            title: '<span style="color: #ff8787">' + event.title + '</span>',
+            title: '<span id="title" style="color: #ff8787">' + event.title + '</span>',
             type: 'html',
             position: 'right',
             content: modal_content.join(""),
@@ -292,6 +295,37 @@ $(document).ready(function() {
         xhttp4.setRequestHeader('Content-Type', 'application/json');
         xhttp4.send(JSON.stringify(data2));
     });
+
+    $(document).on("click", "#edit", function() {
+        //Delete the existing event and open a new popup for a new event with same details.
+        var e_id = parseInt($(this).parent().find('#event_id').html());
+        var e_location = $(this).parent().find('#label_location').html();
+        var e_name = $(this).parent().parent().find('#title').html();
+        var e_time = $(this).parent().find('#label_time').html();
+        console.log(e_id + ' ' + e_location + ' ' + e_name + ' ' + e_time);
+        // var data2 = {
+        //     id: e_id
+        // };
+        // xhttp4 = new XMLHttpRequest();
+        // xhttp4.onreadystatechange = function() {
+        //     if(xhttp4.readyState == 4 && xhttp4.status == 200) {
+        //         console.log(xhttp4.responseText)
+        //         data3 = JSON.parse(xhttp4.responseText);
+        //         if(data3.Status == 'OK') {
+        //             $('#calendar').fullCalendar('removeEvents', e_id);
+        //             WebuiPopovers.hideAll();
+        //         } else {
+        //             alert(data3.Message);
+        //         }
+        //     }
+        // }
+        // xhttp4.open('POST', '/remove');
+        // xhttp4.setRequestHeader('Content-Type', 'application/json');
+        // xhttp4.send(JSON.stringify(data2));
+        $('#calendar').fullCalendar('dayMousedown', e_time);
+
+    });
+
     $(document).on("click", "#settings", function() {
         $(this).webuiPopover({
             title: '<span style="color: #ff8787">Sync Google Calendar</span>',

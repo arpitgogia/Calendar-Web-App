@@ -33,7 +33,12 @@ input.faChkSqr:after {
   content: '\f096';
 }
 
-
+.fc-syncbtn-button {
+    font-family: FontAwesome;
+}
+.fc-syncbtn-fa {
+    font-family: FontAwesome;
+}
 .green-background {
     background-color: #2ed39e;
 }
