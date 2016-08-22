@@ -1,29 +1,28 @@
 $(document).ready(function() {
 
+    // Width excluding the scroll bars
     var w = window.innerWidth
         || document.documentElement.clientWidth
         || document.body.clientWidth;
-
+    //Height excluding the scroll bars
     var h = window.innerHeight
         || document.documentElement.clientHeight
         || document.body.clientHeight;
-    
+
+    //Ajax Config for Update Operation
     var AJAX_OPTIONS = {
         contentType: 'application/json',
         dataType: 'json',
     }
 
+    //Formatting Paramters for X-Editable Fields
     var PARAMFORMATTER = function(params) {
         return JSON.stringify(params);
     }
     
-    // $.fn.editable.defaults.ajaxOptions = {
-    //     contentType: 'application/json',
-    //     dataType: 'json',
-    //     mimeType: 'application/json'
-    // };
-    // console.log($.fn.editable.defaults.ajaxOptions);
+
     console.log('Hello 1wewsasdfwe11');
+    
     var event_count = localStorage.getItem('calendar_event_count');
     if(event_count == null)
         event_count = 0;
@@ -37,6 +36,7 @@ $(document).ready(function() {
         month = temp;
     }
 
+    //Day Reference for Formatting Needs
     var day_ref = {
         0: 'sun',
         1: 'mon',
@@ -50,6 +50,7 @@ $(document).ready(function() {
     var year = d.getFullYear();
     var dateString = year + '-' + month + '-' + date;
     
+    //Converting a Date to ISO Format With Time Zone Offset
     var formatDate = function(now) {
             var tzo = -now.getTimezoneOffset();
             var dif = tzo >= 0 ? '+' : '-';
@@ -67,7 +68,7 @@ $(document).ready(function() {
             + ':' + pad(tzo % 60);
     };
     
-    //Triggered on each render of the month view, displays the current day in the desired color.
+    //Triggered on each render of the month view, marks the current day in the desired color.
     var markToday = function() {
         list = document.getElementsByClassName('fc-today');
         for(var i = 0 ; i < list.length ; i++) {
@@ -90,15 +91,16 @@ $(document).ready(function() {
             animation: 'fade',
             closeable: true,
             cache: false,
-            onShow: function() {
+            onShow: function(element) {
+                // Adding Border Color to the Popover
                 list = document.getElementsByClassName('webui-popover');
                 for(var i = 0 ; i < list.length ; i++)
                     list[i].style.borderColor = '#ff8787';
-                // document.getElementById('start_date').value = d.slice(0, d.indexOf('T'));
             }
         });
     };
 
+    //Triggered at each click of the event
     var eventClickEvent = function(event, jsEvent, view) {
         start = new Date(event.start);
         start = moment(start).format('k:mm a, dddd, MMM D');
@@ -109,6 +111,7 @@ $(document).ready(function() {
         var button = '';
         if(event.location == 'Check Description' && event.description.search('Link') != -1)
             button = 'disabled';
+        //Modal Content; Displays the Event Information
         var modal_content = [
             '<strong><span style="color: #b3b3b3">Where</span></strong>',
             '<br><strong><p><a id="label_location" style="margin-bottom: 2px; color: #777777">' + event.location + '</a></p></strong>',
@@ -133,6 +136,9 @@ $(document).ready(function() {
                 list = document.getElementsByClassName('webui-popover');
                 for(var i = 0 ; i < list.length ; i++)
                     list[i].style.borderColor = '#ff8787';
+                //Adding X Editable Customization to each Event Paramter
+
+                //Title
                 $(element).children().children().find('#title').editable({
                     type: 'text',
                     mode: 'inline',
@@ -151,6 +157,8 @@ $(document).ready(function() {
                         }
                     }
                 })
+
+                //Location
                 $(element).children().children().find('#label_location').editable({
                     type: 'text',
                     mode: 'inline',
@@ -169,6 +177,8 @@ $(document).ready(function() {
                         }
                     }
                 });
+
+                //Start Time
                 $(element).children().children().find('#label_time_start').editable({
                     type: 'combodate',
                     template: 'D MMM YYYY  HH:mm',
@@ -190,6 +200,8 @@ $(document).ready(function() {
                         }
                     }
                 });
+
+                //End Time
                 $(element).children().children().find('#label_time_end').editable({
                     type: 'combodate',
                     template: 'D MMM YYYY  HH:mm',
@@ -211,6 +223,8 @@ $(document).ready(function() {
                         }
                     }
                 });
+
+                //Description
                 $(element).children().children().find('#label_description').editable({
                     type: 'textarea',
                     mode: 'inline',
@@ -410,35 +424,6 @@ $(document).ready(function() {
         xhttp4.send(JSON.stringify(data2));
     });
 
-    $(document).on("click", "#edit", function() {
-        //Delete the existing event and open a new popup for a new event with same details.
-        var e_id = parseInt($(this).parent().find('#event_id').html());
-        var e_location = $(this).parent().find('#label_location').html();
-        var e_name = $(this).parent().parent().find('#title').html();
-        var e_time = $(this).parent().find('#label_time').html();
-        console.log(e_id + ' ' + e_location + ' ' + e_name + ' ' + e_time);
-        // var data2 = {
-        //     id: e_id
-        // };
-        // xhttp4 = new XMLHttpRequest();
-        // xhttp4.onreadystatechange = function() {
-        //     if(xhttp4.readyState == 4 && xhttp4.status == 200) {
-        //         console.log(xhttp4.responseText)
-        //         data3 = JSON.parse(xhttp4.responseText);
-        //         if(data3.Status == 'OK') {
-        //             $('#calendar').fullCalendar('removeEvents', e_id);
-        //             WebuiPopovers.hideAll();
-        //         } else {
-        //             alert(data3.Message);
-        //         }
-        //     }
-        // }
-        // xhttp4.open('POST', '/remove');
-        // xhttp4.setRequestHeader('Content-Type', 'application/json');
-        // xhttp4.send(JSON.stringify(data2));
-        $('#calendar').fullCalendar('dayMousedown', e_time);
-
-    });
 
     $(document).on("click", "#settings", function() {
         $(this).webuiPopover({

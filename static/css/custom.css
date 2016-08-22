@@ -5,11 +5,12 @@ input.faChkRnd, input.faChkSqr {
   visibility: hidden;
 }
 
-input.faChkRnd:checked:after, input.faChkRnd:after,
 input.faChkSqr:checked:after, input.faChkSqr:after {
   visibility: visible;
   font-family: FontAwesome;
-  font-size:25px;height: 17px; width: 17px;
+  font-size: 15px;
+  /*height: 17px; */
+  /*width: 17px;*/
   position: relative;
   top: -3px;
   left: 0px;
@@ -17,16 +18,8 @@ input.faChkSqr:checked:after, input.faChkSqr:after {
   display: inline-block;
 }
 
-input.faChkRnd:checked:after {
-  content: '\f058';
-}
-
-input.faChkRnd:after {
-  content: '\f10c';
-}
-
 input.faChkSqr:checked:after {
-  content: '\f14a';
+  content: '\f046';
 }
 
 input.faChkSqr:after {
@@ -75,4 +68,22 @@ td {
     box-shadow: none;
     background-image:none;
     border:0;
+}
+.modal-name-input {
+    padding: 5px; 
+    margin-bottom: 10px; 
+    border: solid 1px; 
+    border-color: grey;
+    border-radius: 2px; 
+    height: 30px; 
+    width: 230px;
+}
+.modal-location-input {
+    padding: 5px; 
+    margin-bottom: 10px; 
+    border: solid 1px; 
+    border-color: grey;
+    border-radius: 2px; 
+    height: 20px; 
+    width: 230px;
 }

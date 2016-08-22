@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="google-signin-client_id" content="705643443576-1165m248a282nijuhro785fp3anlidih.apps.googleusercontent.com">
         <title>Calendar</title>
         <link href="../static/css/font-awesome.css" rel="stylesheet">
@@ -56,9 +57,9 @@
             </div>
         </div>
         <div id="modal_add" class="modal" style="overflow: auto; padding: 10px; border: solid; border-color: #ff8787; width: 260px; height: auto">
-            <input id="event_name" type="text" style="padding: 5px; margin-bottom: 10px; border: solid 1px; border-color: grey; height: 30px; width: 230px;" placeholder="Event Name">
+            <input id="event_name" type="text" class="modal-name-input" placeholder="Event Name">
             <br>
-            <input id="location" type="text" style="padding: 5px; margin-bottom: 10px; border: solid 1px; border-color: grey; height: 20px; width: 230px;" placeholder="Location">
+            <input id="location" type="text" class="modal-location-input" placeholder="Location">
             <br>
             <label for="start_date" style="margin-left: 5px">Starts</label>
             <br>
@@ -70,7 +71,7 @@
             <input id="end_date" type="date" style="border: solid 1px; border-color: grey; width: auto">
             <input id="end_time" type="time" style="border: solid 1px; border-color: grey; width: auto">
             <br>
-            <input id="all-day" type="checkbox">
+            <input class="faChkSqr" id="all-day" type="checkbox">
             <label for="all-day">All-Day</label>
             <br>
             <label for="description" style="margin-top: 5px; margin-left: 5px">Description</label>
