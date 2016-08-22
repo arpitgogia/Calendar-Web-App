@@ -76,23 +76,18 @@ def remove():
 
 @app.route('/update', methods=['POST'])
 def update():
-    data = request.get_json()
-    data['id'] = str(data['id'])
+    data = request.get_json(force=True)
+    print data
+    data['pk'] = str(data['pk'])
     temp = {}
     try:
         result = db.events.update_one({
-            "Event_ID": data['id']
+            "Event_ID": data['pk']
         }, {
             "$set": {
-                "Name": data['event_name'],
-                "Location": data['location'],
-                "Start": data['start_date'],
-                "End": data['end_date'],
-                "All_Day": data['all_day'], 
-                "Description": data['description'],
-                "Event_ID": data['id']
+                str(data['name']): data['value']
             }
-        }, upsert=True)
+        }, upsert=False)
         temp['Status'] = 'OK'
         temp['Message'] = 'Event Updated Successfully'
     except: 

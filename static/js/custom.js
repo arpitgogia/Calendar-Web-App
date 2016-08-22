@@ -7,10 +7,23 @@ $(document).ready(function() {
     var h = window.innerHeight
         || document.documentElement.clientHeight
         || document.body.clientHeight;
-
     
+    var AJAX_OPTIONS = {
+        contentType: 'application/json',
+        dataType: 'json',
+    }
 
-    console.log('Hello 11134523');
+    var PARAMFORMATTER = function(params) {
+        return JSON.stringify(params);
+    }
+    
+    // $.fn.editable.defaults.ajaxOptions = {
+    //     contentType: 'application/json',
+    //     dataType: 'json',
+    //     mimeType: 'application/json'
+    // };
+    // console.log($.fn.editable.defaults.ajaxOptions);
+    console.log('Hello 1wewsasdfwe11');
     var event_count = localStorage.getItem('calendar_event_count');
     if(event_count == null)
         event_count = 0;
@@ -88,6 +101,9 @@ $(document).ready(function() {
 
     var eventClickEvent = function(event, jsEvent, view) {
         start = new Date(event.start);
+        start = moment(start).format('k:mm a, dddd, MMM D');
+        end = new Date(event.end);
+        end = moment(end).format('k:mm a, dddd, MMM D');
         if(event.description.length == 0)
             event.description = " ";
         var button = '';
@@ -96,13 +112,15 @@ $(document).ready(function() {
         var modal_content = [
             '<strong><span style="color: #b3b3b3">Where</span></strong>',
             '<br><strong><p><a id="label_location" style="margin-bottom: 2px; color: #777777">' + event.location + '</a></p></strong>',
-            '<br><strong><span style="color: #b3b3b3">When</span></strong>',
-            '<br><strong><p><a id="label_time" style="margin-bottom: 2px; color: #777777">' + start.toString() + '</a></p></strong>',
+            '<br><strong><span style="color: #b3b3b3">Start</span></strong>',
+            '<br><strong><p><a id="label_time_start" style="margin-bottom: 2px; color: #777777">' + start.toString() + '</a></p></strong>',
+            '<br><strong><span style="color: #b3b3b3">End</span></strong>',
+            '<br><strong><p><a id="label_time_end" style="margin-bottom: 2px; color: #777777">' + end.toString() + '</a></p></strong>',
             '<br><strong><span style="color: #b3b3b3">Description</label></strong>',
             '<br><strong><p><a id="label_description" style="margin-bottom: 2px; color: #777777">' + event.description + '</a></p></strong>',
-            '<input id="delete" value="Delete" type="button" style="margin-top: 20px; border-radius: 2px; float: left; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">',
+            '<input id="delete" value="Delete" type="button" style="margin-top: 20px; border-radius: 2px; float: left; width: inherit; padding: 5px 30px 5px 30px" class="btn-flat">',
             '<p id="event_id" style="color: white">' + event.id + '</span>',    
-            ];
+        ];
         $(this).webuiPopover({
             title: '<span id="title" style="color: #ff8787">' + event.title + '</span>',
             type: 'html',
@@ -115,20 +133,101 @@ $(document).ready(function() {
                 list = document.getElementsByClassName('webui-popover');
                 for(var i = 0 ; i < list.length ; i++)
                     list[i].style.borderColor = '#ff8787';
+                $(element).children().children().find('#title').editable({
+                    type: 'text',
+                    mode: 'inline',
+                    url: '/update',
+                    name: 'Name',
+                    pk: event.id,
+                    ajaxOptions: AJAX_OPTIONS,
+                    params: PARAMFORMATTER,
+                    success: function(response, newValue) {
+                        if(response.Status == 'OK') {
+                            event.title = newValue;
+                            $('#calendar').fullCalendar('updateEvent', event);
+                            WebuiPopovers.hideAll();
+                        } else {
+                            alert(response.Message);
+                        }
+                    }
+                })
                 $(element).children().children().find('#label_location').editable({
                     type: 'text',
-                    mode: 'inline'
+                    mode: 'inline',
+                    url: '/update',
+                    name: 'Location',
+                    pk: event.id,
+                    ajaxOptions: AJAX_OPTIONS,
+                    params: PARAMFORMATTER,
+                    success: function(response, newValue) {
+                        if(response.Status == 'OK') {
+                            event.location = newValue;
+                            $('#calendar').fullCalendar('updateEvent', event);
+                            WebuiPopovers.hideAll();
+                        } else {
+                            alert(response.Message);
+                        }
+                    }
                 });
-                $(element).children().children().find('#label_time').editable({
+                $(element).children().children().find('#label_time_start').editable({
                     type: 'combodate',
                     template: 'D MMM YYYY  HH:mm',
-                    format: 'YYYY-MM-DD HH:mm',
-                    viewformat: 'MMM D, YYYY, HH:mm', 
-                    mode: 'inline'
+                    format: 'YYYY-MM-DDTHH:mm:ss.sssZ',
+                    viewformat: 'k:mm a, dddd, MMM D',
+                    mode: 'inline',
+                    url: '/update',
+                    name: 'Start',
+                    pk: event.id,
+                    ajaxOptions: AJAX_OPTIONS,
+                    params: PARAMFORMATTER,
+                    success: function(response, newValue) {
+                        if(response.Status == 'OK') {
+                            event.start = newValue;
+                            $('#calendar').fullCalendar('updateEvent', event);
+                            WebuiPopovers.hideAll();
+                        } else {
+                            alert(response.Message);
+                        }
+                    }
+                });
+                $(element).children().children().find('#label_time_end').editable({
+                    type: 'combodate',
+                    template: 'D MMM YYYY  HH:mm',
+                    format: 'YYYY-MM-DDTHH:mm:ss.sssZ',
+                    viewformat: 'k:mm a, dddd, MMM D',
+                    mode: 'inline',
+                    url: '/update',
+                    name: 'End',
+                    pk: event.id,
+                    ajaxOptions: AJAX_OPTIONS,
+                    params: PARAMFORMATTER,
+                    success: function(response, newValue) {
+                        if(response.Status == 'OK') {
+                            event.end = newValue;
+                            $('#calendar').fullCalendar('updateEvent', event);
+                            WebuiPopovers.hideAll();
+                        } else {
+                            alert(response.Message);
+                        }
+                    }
                 });
                 $(element).children().children().find('#label_description').editable({
                     type: 'textarea',
-                    mode: 'inline'
+                    mode: 'inline',
+                    url: '/update',
+                    name: 'Description',
+                    pk: event.id,
+                    ajaxOptions: AJAX_OPTIONS,
+                    params: PARAMFORMATTER,
+                    success: function(response, newValue) {
+                        if(response.Status == 'OK') {
+                            event.description = newValue;
+                            $('#calendar').fullCalendar('updateEvent', event);
+                            WebuiPopovers.hideAll();
+                        } else {
+                            alert(response.Message);
+                        }
+                    }
                 });
             }
         });
