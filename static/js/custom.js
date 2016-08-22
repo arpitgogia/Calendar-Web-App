@@ -10,7 +10,7 @@ $(document).ready(function() {
 
     
 
-    console.log('Hello 10');
+    console.log('Hello 11134523');
     var event_count = localStorage.getItem('calendar_event_count');
     if(event_count == null)
         event_count = 0;
@@ -95,13 +95,12 @@ $(document).ready(function() {
             button = 'disabled';
         var modal_content = [
             '<strong><span style="color: #b3b3b3">Where</span></strong>',
-            '<br><strong><p id="label_location" style="margin-bottom: 2px; color: #777777">' + event.location + '</p></strong>',
+            '<br><strong><p><a id="label_location" style="margin-bottom: 2px; color: #777777">' + event.location + '</a></p></strong>',
             '<br><strong><span style="color: #b3b3b3">When</span></strong>',
-            '<br><strong><p id="label_time" style="margin-bottom: 2px; color: #777777">' + start.toString() + '</p></strong>',
+            '<br><strong><p><a id="label_time" style="margin-bottom: 2px; color: #777777">' + start.toString() + '</a></p></strong>',
             '<br><strong><span style="color: #b3b3b3">Description</label></strong>',
-            '<br><strong><p id="label_description" style="margin-bottom: 2px; color: #777777">' + event.description + '</p></strong>',
+            '<br><strong><p><a id="label_description" style="margin-bottom: 2px; color: #777777">' + event.description + '</a></p></strong>',
             '<input id="delete" value="Delete" type="button" style="margin-top: 20px; border-radius: 2px; float: left; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">',
-            '<input id="edit" ' + button + ' value="Edit" type="button" style="margin-top: 20px; border-radius: 2px; color: white; margin-right: 2px; background: #ff8787; float: right; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">',
             '<p id="event_id" style="color: white">' + event.id + '</span>',    
             ];
         $(this).webuiPopover({
@@ -111,10 +110,26 @@ $(document).ready(function() {
             content: modal_content.join(""),
             animation: 'fade',
             closeable: true,
-            onShow: function() {
+            onShow: function(element) {
+                console.log(element);
                 list = document.getElementsByClassName('webui-popover');
                 for(var i = 0 ; i < list.length ; i++)
                     list[i].style.borderColor = '#ff8787';
+                $(element).children().children().find('#label_location').editable({
+                    type: 'text',
+                    mode: 'inline'
+                });
+                $(element).children().children().find('#label_time').editable({
+                    type: 'combodate',
+                    template: 'D MMM YYYY  HH:mm',
+                    format: 'YYYY-MM-DD HH:mm',
+                    viewformat: 'MMM D, YYYY, HH:mm', 
+                    mode: 'inline'
+                });
+                $(element).children().children().find('#label_description').editable({
+                    type: 'textarea',
+                    mode: 'inline'
+                });
             }
         });
     };

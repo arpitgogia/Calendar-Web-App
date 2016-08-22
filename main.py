@@ -29,7 +29,7 @@ def get_events():
 @app.route('/create', methods=['POST'])
 def create():
     data = request.get_json()
-    print data
+    data['id'] = str(data['id'])
     temp = {}
     try:
         # print data['event_name']
@@ -56,7 +56,7 @@ def create():
 @app.route('/remove', methods=['POST'])
 def remove():
     data = request.get_json()
-    print str(data)
+    data['id'] = str(data['id'])
     temp = {}
     try:
         print data['id']
@@ -77,18 +77,22 @@ def remove():
 @app.route('/update', methods=['POST'])
 def update():
     data = request.get_json()
+    data['id'] = str(data['id'])
     temp = {}
     try:
-        result = db.events.update_many({
-            "Event_ID": data['event_id']
+        result = db.events.update_one({
+            "Event_ID": data['id']
         }, {
-            "Name": data['event_name'],
-            "Location": data['location'],
-            "Start": data['start_date'],
-            "End": data['end_date'],
-            "All_Day": data['all_day'], 
-            "Description": data['description']
-        })
+            "$set": {
+                "Name": data['event_name'],
+                "Location": data['location'],
+                "Start": data['start_date'],
+                "End": data['end_date'],
+                "All_Day": data['all_day'], 
+                "Description": data['description'],
+                "Event_ID": data['id']
+            }
+        }, upsert=True)
         temp['Status'] = 'OK'
         temp['Message'] = 'Event Updated Successfully'
     except: 
