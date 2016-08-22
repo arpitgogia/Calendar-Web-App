@@ -247,6 +247,7 @@ $(document).ready(function() {
         });
     };
 
+    //Obtaining the events from the database
     var event_list = [];
     var xhttp1 = new XMLHttpRequest();
     xhttp1.onreadystatechange = function() {
@@ -285,7 +286,10 @@ $(document).ready(function() {
                 viewRender: markToday,
                 dayClick: dayClickEvent,
                 eventClick: eventClickEvent,
-                events: event_list
+                events: event_list,
+                eventBorderColor: '#2ed39e',
+                eventBackgroundColor: 'white',
+                eventTextColor: '#2bc493'
             });
             
         }

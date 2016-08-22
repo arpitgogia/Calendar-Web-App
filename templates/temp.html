@@ -1,23 +1,47 @@
 <html>
     <head>
+        <link href="../static/css/font-awesome.css" rel="stylesheet">
+        <!--<link href="../static/css/custom.css" rel="stylesheet">-->
+        <link href="../static/css/fullcalendar.css" rel="stylesheet">
+        <link href="../static/css/bootstrap.css" rel="stylesheet">
+        <link href="../static/css/mprogress.min.css" rel="stylesheet">
+        <link href="../static/css/jquery.webui-popover.css" rel="stylesheet">
+        <!--<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>-->
+        <link href="../static/css/bootstrap-datetimepicker.css" rel="stylesheet">
         <script src="../static/js/jquery-3.1.0.min.js"></script>
-        <script>
-            $(document).ready(function() {
-                $(document).on("click", "#try", function(e) {
-                    console.log("Trying");
-                    document.getElementById('heading').style.visibility = 'hidden';
-                    document.getElementById('heading').style.display = 'block';
-                });
-            });
-        </script>
+        <script src="../static/js/jquery.webui-popover.js"></script>
+        <script src="../static/js/bootstrap.js"></script>
+        <script src="../static/js/moment.min.js"></script>
+        <script src="../static/js/jquery.simpleWeather.js"></script>
+        <script src="../static/js/mprogress.min.js"></script>
+        <script src="../static/js/fullcalendar.js"></script>
+        <!--<script src="https://apis.google.com/js/platform.js" async defer></script>
+        <script src="https://apis.google.com/js/client.js?onload=checkAuth"></script>-->
+        <script src="../static/js/bootstrap-editable.min.js"></script>
+        <script src="../static/js/bootstrap-datetimepicker.js"></script>
+        <!--<script src="../static/js/picker.date.js"></script>
+        <script src="../static/js/picker.time.js"></script>-->
+        <!--<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>-->
+        <script src="../static/js/custom.js"></script>
     </head>
     <body>
-        <div class="row">
-            <div class="form">
-                <h1 id="heading">Heading</h1>
-                <input id="inp" type="text" placeholder="Name" style="display: none;">
-                <input type="button" id="try">
-            </div>
+        <div class="input-append date form_datetime">
+            <input id="date" size="16" type="text" value="" readonly>
+            <span class="add-on"><i class="icon-remove"></i></span>
+            <span class="add-on"><i class="icon-calendar"></i></span>
         </div>
+        
+        <script type="text/javascript">
+            $(".form_datetime").datetimepicker({
+                format: "dd MM yyyy - hh:ii",
+                autoclose: true,
+                todayBtn: true,
+                startDate: "2013-02-14 10:00",
+                minuteStep: 10
+            });
+            $(document).ready(function() {
+                console.log($('#date').val());
+            });
+        </script>
     </body>
 </html>
