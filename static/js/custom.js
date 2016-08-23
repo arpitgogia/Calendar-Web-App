@@ -92,7 +92,8 @@ $(document).ready(function() {
                         start: events[i].Start,
                         location: events[i].Location,
                         end: events[i].End,
-                        description: events[i].Description
+                        description: events[i].Description,
+                        allDay: events[i].All_Day
                     }
                     var temp = new moment(event.start);
                     var now = new moment();
@@ -118,28 +119,28 @@ $(document).ready(function() {
                 },
                 height: h,
                 dayRender: function(date, cell) {
+                    // console.log(date.toString());
                     var temp = date.toDate();
                     // console.log(view);
-                    date = date.format("dddd, D MMMM YYYY");
-                    date = '<span style="color: #ff8787">' + date + '</span>'
+                    // console.log(date);
+                    date1 = date.format("dddd, D MMMM YYYY");
+                    date2 = '<span id="header" style="color: #ff8787">' + date1 + '</span>'
                     // console.log($(this));
                     $(cell).webuiPopover({
-                        title: date,
+                        title: date2,
                         type: 'html',
                         position: 'right',
                         content: $('#modal_add').html(),
                         animation: 'fade',
                         closeable: true,
                         cache: false,
-                        onHide: function(element) {
-                            // $(element).find('#start_date').flatpickr().close();
-                            // $(element).find('#end_date').flatpickr().close();
-                        },
                         onShow: function(element) {
                             // Adding Border Color to the Popover
                             list = document.getElementsByClassName('webui-popover');
                             for(var i = 0 ; i < list.length ; i++)
                                 list[i].style.borderColor = '#ff8787';
+
+                            //Building the date and time picker
                             $(element).find('#start_date').datetimepicker({
                                 format: 'H:ii p, MM d yyyy',
                                 autoclose: true,
@@ -160,9 +161,19 @@ $(document).ready(function() {
                                 showMeridian: true,
                                 initialDate: temp
                             });
-                            // var temp2 = temp.toString();
-                            // $(element).find('#start_date').val(temp2.slice(0, temp2.indexOf('T')));
-                            // console.log($(element).find('#start_date'));
+                            $(element).find('#all-day').on('click', function() {
+                                var check = $(element).find('#all-day').prop('checked');
+                                if(check == true) {
+                                    $(element).find('#start_date').prop('disabled', true);
+                                    $(element).find('#end_date').prop('disabled', true);    
+                                }
+                                else {
+                                    $(element).find('#start_date').prop('disabled', false);
+                                    $(element).find('#start_date').attr('placeholder', 'Start Date and Time');
+                                    $(element).find('#end_date').prop('disabled', false);
+                                    $(element).find('#end_date').attr('placeholder', 'End Date and Time');
+                                }    
+                            });
                         }
                     });
                 },
@@ -336,7 +347,7 @@ $(document).ready(function() {
                 },
                 title: '',
                 editable: false,
-                allDaySlot: false,
+                allDaySlot: true,
                 events: event_list,
                 viewRender: function(view, element) {
                     // console.log($(element).children().children().children().children()[1].children);
@@ -395,16 +406,24 @@ $(document).ready(function() {
         var location = $(this).parent().find('#location').val();
         var start_date = $(this).parent().find('#start_date').datetimepicker()[0].value;
         var end_date = $(this).parent().find('#end_date').datetimepicker()[0].value;
-        
-        start_date = (new moment(start_date, 'h:mm a, MMMM D YYYY'));
-        end_date = (new moment(end_date, 'h:mm a, MMMM D YYYY'));
-        start_date = formatDate(start_date.toDate());
-        end_date = formatDate(end_date.toDate());
+        // console.log($(this).parent().parent().find('#header').html());
 
         var all_day = $(this).parent().find('#all-day').prop('checked');
         var description = $(this).parent().find('#description').val();
+        if(all_day == false) {
+            start_date = (new moment(start_date, 'h:mm a, MMMM D YYYY'));//['h:mm a, MMMM D YYYY', 'dddd, D MMMM YYYY']));
+            end_date = (new moment(end_date, 'h:mm a, MMMM D YYYY'));//['h:mm a, MMMM D YYYY', 'dddd, D MMMM YYYY']));
+        } else {
+            header = $(this).parent().parent().find('#header').html();
+            start_date = new moment(header, 'dddd, D MMMM YYYY');
+            end_date = start_date;
+        }
+        start_date = formatDate(start_date.toDate());
+        end_date = formatDate(end_date.toDate());
         console.log(start_date);
         console.log(end_date);
+        console.log(all_day);
+        
         var event = {
             title: event_name,
             allDay: all_day,
