@@ -263,6 +263,12 @@ $(document).ready(function() {
                         end: events[i].End,
                         description: events[i].Description
                     }
+                    var temp = new moment(event.start);
+                    var now = new moment();
+                    if(now.date() == temp.date() && now.month() == temp.month() && now.year() == temp.year()) {
+                        event.backgroundColor = '#f8f8f8';
+                        event.textColor = '#2ed39e';
+                    }
                     event_list.push(event);
                 }
             }
@@ -291,7 +297,21 @@ $(document).ready(function() {
                 eventBackgroundColor: 'white',
                 eventTextColor: '#2bc493'
             });
-            
+            $('#timeline').fullCalendar({
+                defaultView: 'agendaDay',
+                header: {
+                    left: '',
+                    center: '',
+                    right: ''
+                },
+                title: '',
+                editable: false,
+                allDaySlot: false,
+                events: event_list,
+                viewRender: function(view, element) {
+                    console.log($(element).children().children().children().children()[1].children);
+                }
+            })
         }
     };
     xhttp1.open('GET', "/get_events", true);
@@ -376,20 +396,28 @@ $(document).ready(function() {
         };
 
         var data = {
-                event_name: event_name,
-                location: location,
-                start_date: start_date,
-                end_date: end_date,
-                all_day: all_day,
-                description: description,
-                id: event_count
-            };
+            event_name: event_name,
+            location: location,
+            start_date: start_date,
+            end_date: end_date,
+            all_day: all_day,
+            description: description,
+            id: event_count
+        };
+
         xhttp3 = new XMLHttpRequest();
         xhttp3.onreadystatechange = function() {
             if (xhttp3.readyState == 4 && xhttp3.status == 200) {
                 data = JSON.parse(xhttp3.responseText);
                 if(data.Status == 'OK') {
+                    var temp = new moment(event.start);
+                    var now = new moment();
+                    if(now.date() == temp.date() && now.month() == temp.month() && now.year() == temp.year()) {
+                        event.backgroundColor = '#f8f8f8';
+                        event.textColor = '#2ed39e';
+                    }
                     $('#calendar').fullCalendar('renderEvent', event, true);
+                    $('#timeline').fullCalendar('renderEvent', event, true);
                     event_count = parseInt(event_count) + 1;
                     localStorage.setItem('calendar_event_count', event_count);
                     WebuiPopovers.hideAll();
@@ -567,7 +595,14 @@ $(document).ready(function() {
                             data = JSON.parse(xhttp3.responseText);
                             if(data.Status == 'OK') {
                                 console.log("Successful");
+                                var temp = new moment(local_event.start);
+                                var now = new moment();
+                                if(now.date() == temp.date() && now.month() == temp.month() && now.year() == temp.year()) {
+                                    local_event.backgroundColor = '#f8f8f8';
+                                    local_event.textColor = '#2ed39e';
+                                }
                                 $('#calendar').fullCalendar('renderEvent', local_event, true);
+                                $('#timeline').fullCalendar('renderEvent', local_event, true);
                                 event_count = parseInt(event_count) + 1;
                                 localStorage.setItem('calendar_event_count', event_count);
                             } else {

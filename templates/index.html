@@ -44,11 +44,21 @@
                     <div class="card green-background left-column" id="datepicker" style="width: inherit"></div>
                     <script>
                         $(document).ready(function() {
-                            $('#datepicker').datepicker({});
+                            $('#datepicker').datepicker({
+                                show: function() {
+                                    // $(this).unbind('mouseenter mouseleave');
+                                    $(this).attr('onmousehover', '');
+                                }
+                            });
+                            var list1 = document.getElementsByClassName('today');
+                            for(var i = 0 ; i < list1.length ; i++)
+                                list1[i].style.background = 'white';
                         });
                     </script>
                     <div class="card green-background left-column">
                         <p id="clock" class="time"></span>
+                    </div>
+                    <div id="timeline" class="card green-background left-column" style="overflow-x:hidden; overflow-y:hidden">
                     </div>
                     <div>
                         <div id="progress" class="demo-bar"></div>
@@ -69,11 +79,6 @@
             <br>
             <input id="start_date" type="date" style="margin-bottom: 10px; border: solid 1px; border-color: grey; width: auto">
             <input id="start_time" type="time" style="border: solid 1px; border-color: grey; width: auto">
-            <!--<div class="input-append date">
-                <input id="date" size="16" type="text" value="" readonly>
-                <span class="add-on"><i class="icon-remove"></i></span>
-                <span class="add-on"><i class="icon-calendar"></i></span>
-            </div>-->
             <br>
             <label for="end_date" style="margin-left: 5px">Ends</label>
             <br>
@@ -93,10 +98,5 @@
         <div id="modal_login" style="visibility: hidden">
             <div id="auth-button" class="g-signin2" data-onsuccess="onSignIn"></div>
         </div>
-        <script>
-            // $(document).ready(function() {
-                       
-            // }) 
-        </script>
     </body>
 </html>
