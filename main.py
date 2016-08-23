@@ -61,7 +61,7 @@ def remove():
     try:
         print data['id']
         result = db.events.delete_many({
-            "Event_ID": int(data['id'])
+            "Event_ID": str(data['id'])
         })
         print result
         temp['Status'] = 'OK'

@@ -21,7 +21,7 @@ $(document).ready(function() {
     }
     
 
-    console.log('Hellaao2222 we11');
+    console.log('Hellosss sswe11');
     
     var event_count = localStorage.getItem('calendar_event_count');
     if(event_count == null)
@@ -77,28 +77,6 @@ $(document).ready(function() {
         }
     };
     
-    //Triggered on each click of a day, to display the form for creating an event.
-    var dayClickEvent = function(date, jsEvent, view) {
-        var temp = date.toDate();
-        console.log(view);
-        date = date.format("dddd, D MMMM YYYY");
-        date = '<span style="color: #ff8787">' + date + '</span>'
-        $(this).webuiPopover({
-            title: date,
-            type: 'html',
-            position: 'right',
-            content: $('#modal_add').html(),
-            animation: 'fade',
-            closeable: true,
-            cache: false,
-            onShow: function(element) {
-                // Adding Border Color to the Popover
-                list = document.getElementsByClassName('webui-popover');
-                for(var i = 0 ; i < list.length ; i++)
-                    list[i].style.borderColor = '#ff8787';
-            }
-        });
-    };
 
     //Obtaining the events from the database
     var event_list = [];
@@ -139,12 +117,60 @@ $(document).ready(function() {
                     right: ''
                 },
                 height: h,
+                dayRender: function(date, cell) {
+                    var temp = date.toDate();
+                    // console.log(view);
+                    date = date.format("dddd, D MMMM YYYY");
+                    date = '<span style="color: #ff8787">' + date + '</span>'
+                    // console.log($(this));
+                    $(cell).webuiPopover({
+                        title: date,
+                        type: 'html',
+                        position: 'right',
+                        content: $('#modal_add').html(),
+                        animation: 'fade',
+                        closeable: true,
+                        cache: false,
+                        onHide: function(element) {
+                            // $(element).find('#start_date').flatpickr().close();
+                            // $(element).find('#end_date').flatpickr().close();
+                        },
+                        onShow: function(element) {
+                            // Adding Border Color to the Popover
+                            list = document.getElementsByClassName('webui-popover');
+                            for(var i = 0 ; i < list.length ; i++)
+                                list[i].style.borderColor = '#ff8787';
+                            $(element).find('#start_date').datetimepicker({
+                                format: 'H:ii p, MM d yyyy',
+                                autoclose: true,
+                                clearBtn: true,
+                                todayBtn: true,
+                                todayHighlight: true,
+                                minuteStep: 1,
+                                showMeridian: true,
+                                initialDate: temp
+                            });
+                            $(element).find('#end_date').datetimepicker({
+                                format: 'H:ii p, MM d yyyy',
+                                autoclose: true,
+                                clearBtn: true,
+                                todayBtn: true,
+                                todayHighlight: true,
+                                minuteStep: 1,
+                                showMeridian: true,
+                                initialDate: temp
+                            });
+                            // var temp2 = temp.toString();
+                            // $(element).find('#start_date').val(temp2.slice(0, temp2.indexOf('T')));
+                            // console.log($(element).find('#start_date'));
+                        }
+                    });
+                },
                 width: w,
                 defaultDate: dateString,
                 editable: true,
                 eventLimit: true,
                 viewRender: markToday,
-                dayClick: dayClickEvent,
                 events: event_list,
                 eventBorderColor: '#2ed39e',
                 eventBackgroundColor: 'white',
@@ -355,7 +381,7 @@ $(document).ready(function() {
         list[i].style.color = '#f8f8f8';
     }
 
-    $('td').css('text-align', 'left');
+    $('.fc-day-number').css('text-align', 'left');
     list = document.getElementsByTagName('td');
 
     //Saving an event
@@ -363,32 +389,22 @@ $(document).ready(function() {
     $(document).on("click", "#cancel", function() {
         WebuiPopovers.hideAll();
     });
+
     $(document).on("click", "#save", function() {
-        // $(this).parent().find('#all-day').change(function() {
-        //     if($(this).is(":checked")) {
-        //         console.log('checked');
-        //     } else {
-        //         console.log('unchecked');
-        //     }
-        // });
         var event_name = $(this).parent().find('#event_name').val();
         var location = $(this).parent().find('#location').val();
-        var start_date = $(this).parent().find('#start_date').val();
-        var start_time = $(this).parent().find('#start_time').val();
-        var end_date = $(this).parent().find('#end_date').val();
-        var end_time = $(this).parent().find('#end_time').val();
+        var start_date = $(this).parent().find('#start_date').datetimepicker()[0].value;
+        var end_date = $(this).parent().find('#end_date').datetimepicker()[0].value;
         
-        start_date = new Date(start_date.slice(0, 4), (parseInt(start_date.slice(5, 7)) - 1).toString(), start_date.slice(8), start_time.slice(0, 2), 
-                    start_time.slice(3));
-        end_date = new Date(end_date.slice(0, 4), (parseInt(end_date.slice(5, 7)) - 1).toString(), end_date.slice(8), end_time.slice(0, 2), 
-                    end_time.slice(3));
-
-        start_date = formatDate(start_date);
-        end_date = formatDate(end_date);
+        start_date = (new moment(start_date, 'h:mm a, MMMM D YYYY'));
+        end_date = (new moment(end_date, 'h:mm a, MMMM D YYYY'));
+        start_date = formatDate(start_date.toDate());
+        end_date = formatDate(end_date.toDate());
 
         var all_day = $(this).parent().find('#all-day').prop('checked');
         var description = $(this).parent().find('#description').val();
-
+        console.log(start_date);
+        console.log(end_date);
         var event = {
             title: event_name,
             allDay: all_day,
@@ -438,7 +454,7 @@ $(document).ready(function() {
 
     $(document).on("click", "#delete", function() {
         var e_id = parseInt($(this).parent().find('#event_id').html());
-        // console.log(e_id);
+        console.log(e_id);
         var data2 = {
             id: e_id
         };

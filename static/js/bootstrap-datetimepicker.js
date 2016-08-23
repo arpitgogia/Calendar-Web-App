@@ -116,7 +116,7 @@
       leftArrow: this.fontAwesome ? 'fa-arrow-left' : (this.bootcssVer === 3 ? 'glyphicon-arrow-left' : 'icon-arrow-left'),
       rightArrow: this.fontAwesome ? 'fa-arrow-right' : (this.bootcssVer === 3 ? 'glyphicon-arrow-right' : 'icon-arrow-right')
     }
-    this.icontype = this.fontAwesome ? 'fa' : 'glyphicon';
+    this.icontype = 'fa';
 
     this._attachEvents();
 
