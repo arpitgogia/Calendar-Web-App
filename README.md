@@ -20,3 +20,7 @@ Minor Issues
 1.  The Event Creation Popup suffers from a bug that doesn't allow it to detect if it is overflowing the viewport or not(https://github.com/sandywalker/webui-popover/issues/21). In addition to that it may be very sensitive to clicks on an area of the day cell.
 2.  The weather API may take a while to load the weather.
 3.  No matter how much I tried I couldn't get the sync and settings buttons to the right of the calendar header.
+
+Notes
+-
+*   Comments have been included in the code for understanding. 
