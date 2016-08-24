@@ -5,10 +5,26 @@ app = Flask(__name__)
 client = MongoClient()
 db = client.calendar
 event_id = 0
+
+"""
+    Database Schema:
+        "Name": String, 
+        "Location": String, 
+        "Start": ISO Date String, 
+        "End": ISO Date String, 
+        "All_Day": Boolean Flag, 
+        "Description": String describing the Event,
+        "Event_ID": Identifier according to RFC and Google Specifications,
+        "Type": (Local/Google) Identifying the source of the event
+"""
+
 @app.route('/', methods=['GET'])
 def home():
     return render_template('index.html')
 
+"""
+    Obtaining Events from the DB
+"""
 @app.route('/get_events', methods=['GET'])
 def get_events():
     data = db.events.find({}, {"_id":0})
@@ -26,6 +42,9 @@ def get_events():
     resp.headers.set('Access-Control-Allow-Origin', '*')
     return resp
 
+"""
+    Adding Events to the DB
+"""
 @app.route('/create', methods=['POST'])
 def create():
     data = request.get_json()
@@ -54,6 +73,9 @@ def create():
     resp.headers.set('Access-Control-Allow-Origin', '*')
     return resp
 
+"""
+    Removing events from the DB
+"""
 @app.route('/remove', methods=['POST'])
 def remove():
     data = request.get_json()
@@ -75,6 +97,9 @@ def remove():
     resp.headers.set('Access-Control-Allow-Origin', '*')
     return resp
 
+"""
+    Updating an event in the DB
+"""
 @app.route('/update', methods=['POST'])
 def update():
     data = request.get_json(force=True)

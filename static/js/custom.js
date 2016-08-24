@@ -1,26 +1,36 @@
 $(document).ready(function() {
     localStorage.setItem('AUTHORIZED', 'false');
-    // Width excluding the scroll bars
+    /**
+     * Width excluding the scroll bars
+     */
     var w = window.innerWidth
         || document.documentElement.clientWidth
         || document.body.clientWidth;
-    //Height excluding the scroll bars
+    /**
+     * Height excluding the scroll bars
+     */
     var h = window.innerHeight
         || document.documentElement.clientHeight
         || document.body.clientHeight;
 
-    //Ajax Config for Update Operation
+    /**
+     * Ajax Config for Update Operation
+     */
     var AJAX_OPTIONS = {
         contentType: 'application/json',
         dataType: 'json',
     }
 
-    //Formatting Paramters for X-Editable Fields
+    /**
+     * Formatting Paramters for X-Editable Fields
+     */
     var PARAMFORMATTER = function(params) {
         return JSON.stringify(params);
     }
     
-    //Random IDGenerator according to Google Specifications
+    /**
+     * Random IDGenerator according to Google Specifications
+     */
     var IDGenerator = function() {
         length = Math.floor(Math.random() * 5 + 24);
         timestamp = +new Date;
@@ -37,12 +47,7 @@ $(document).ready(function() {
         return id;
     }
 
-    console.log(' 123');
     
-    // var event_count = localStorage.getItem('calendar_event_count');
-    // if(event_count == null)
-    //     event_count = 0;
-
     var d = new Date();
     var month = d.getMonth() + 1;
     
@@ -52,7 +57,9 @@ $(document).ready(function() {
         month = temp;
     }
 
-    //Day Reference for Formatting Needs
+    /**
+     * Day Reference for Formatting Needs
+     */
     var day_ref = {
         0: 'sun',
         1: 'mon',
@@ -66,7 +73,9 @@ $(document).ready(function() {
     var year = d.getFullYear();
     var dateString = year + '-' + month + '-' + date;
     
-    //Converting a Date to ISO Format With Time Zone Offset
+    /**
+     * Converting a Date to ISO Format With Time Zone Offset
+     */
     var formatDate = function(now) {
             var tzo = -now.getTimezoneOffset();
             var dif = tzo >= 0 ? '+' : '-';
@@ -84,7 +93,9 @@ $(document).ready(function() {
             + ':' + pad(tzo % 60);
     };
     
-    //Triggered on each render of the month view, marks the current day in the desired color.
+    /**
+     * Triggered on each render of the month view, marks the current day in the desired color.
+     */
     var markToday = function() {
         list = document.getElementsByClassName('fc-today');
         for(var i = 0 ; i < list.length ; i++) {
@@ -94,7 +105,9 @@ $(document).ready(function() {
     };
     
 
-    //Obtaining the events from the database
+    /** 
+     * Obtaining the events from the database
+     */
     var event_list = [];
     var xhttp1 = new XMLHttpRequest();
     xhttp1.onreadystatechange = function() {
@@ -423,34 +436,44 @@ $(document).ready(function() {
         list[i].style.textAlign = 'left';
     list = document.getElementsByTagName('td');
 
-    //Saving an event
+    //Cancel button closes the form modal
 
     $(document).on("click", "#cancel", function() {
         WebuiPopovers.hideAll();
     });
 
+
+    /**
+     * Saving an Element
+     */
     $(document).on("click", "#save", function() {
         var event_name = $(this).parent().find('#event_name').val();
         var location = $(this).parent().find('#location').val();
         var start_date = $(this).parent().find('#start_date').datetimepicker()[0].value;
         var end_date = $(this).parent().find('#end_date').datetimepicker()[0].value;
-        // console.log($(this).parent().parent().find('#header').html());
 
         var all_day = $(this).parent().find('#all-day').prop('checked');
         var description = $(this).parent().find('#description').val();
+
+        //If All Day is false the start and end are obtained from the Form
+        //Else from the Title of the Modal
         if(all_day == false) {
-            start_date = (new moment(start_date, 'h:mm a, MMMM D YYYY'));//['h:mm a, MMMM D YYYY', 'dddd, D MMMM YYYY']));
-            end_date = (new moment(end_date, 'h:mm a, MMMM D YYYY'));//['h:mm a, MMMM D YYYY', 'dddd, D MMMM YYYY']));
+            start_date = (new moment(start_date, 'h:mm a, MMMM D YYYY'));
+            end_date = (new moment(end_date, 'h:mm a, MMMM D YYYY'));
         } else {
             header = $(this).parent().parent().find('#header').html();
             start_date = new moment(header, 'dddd, D MMMM YYYY');
             end_date = start_date;
         }
+
+        //Format the Date into an ISO String with UTC Offset +05:30
         start_date = formatDate(start_date.toDate());
         end_date = formatDate(end_date.toDate());
         console.log(start_date);
         console.log(end_date);
         console.log(all_day);
+
+        //Generating a new ID for the event
         var id = IDGenerator();
         var event = {
             title: event_name,
@@ -474,43 +497,47 @@ $(document).ready(function() {
             type: 'Local'
         };
 
-        // xhttp3 = new XMLHttpRequest();
-        // xhttp3.onreadystatechange = function() {
-        //     if (xhttp3.readyState == 4 && xhttp3.status == 200) {
-        //         data = JSON.parse(xhttp3.responseText);
-        //         if(data.Status == 'OK') {
-        //             var temp = new moment(event.start);
-        //             var now = new moment();
-        //             if(now.date() == temp.date() && now.month() == temp.month() && now.year() == temp.year()) {
-        //                 event.backgroundColor = '#f8f8f8';
-        //                 event.textColor = '#2ed39e';
-        //             }
-        //             $('#calendar').fullCalendar('renderEvent', event, true);
-        //             $('#timeline').fullCalendar('renderEvent', event, true);
-        //             // event_count = parseInt(event_count) + 1;
-        //             // localStorage.setItem('calendar_event_count', event_count);
-        //             WebuiPopovers.hideAll();
-        //         } else {
-        //             alert(data.Message);
-        //         }
-        //     }
-        // };
-        // xhttp3.open('POST', '/create');
-        // xhttp3.setRequestHeader('Content-Type', 'application/json');
-        // xhttp3.send(JSON.stringify(data));
+        //Storing the Event in the DB
+        xhttp3 = new XMLHttpRequest();
+        xhttp3.onreadystatechange = function() {
+            if (xhttp3.readyState == 4 && xhttp3.status == 200) {
+                data = JSON.parse(xhttp3.responseText);
+                if(data.Status == 'OK') {
+                    var temp = new moment(event.start);
+                    var now = new moment();
+                    if(now.date() == temp.date() && now.month() == temp.month() && now.year() == temp.year()) {
+                        event.backgroundColor = '#f8f8f8';
+                        event.textColor = '#2ed39e';
+                    }
+                    //Rendering the Event onto the Calendars
+                    $('#calendar').fullCalendar('renderEvent', event, true);
+                    $('#timeline').fullCalendar('renderEvent', event, true);
+                    
+                    WebuiPopovers.hideAll();
+                } else {
+                    alert(data.Message);
+                }
+            }
+        };
+        xhttp3.open('POST', '/create');
+        xhttp3.setRequestHeader('Content-Type', 'application/json');
+        xhttp3.send(JSON.stringify(data));
     });
 
-
+    /**
+     * Deleting an Event
+     */
     $(document).on("click", "#delete", function() {
+        //Obtaining the ID of the Event
         var e_id = $(this).parent().find('#event_id').html();
         console.log(e_id);
         var data2 = {
             id: e_id
         };
+        //Deleting the event from the DB
         xhttp4 = new XMLHttpRequest();
         xhttp4.onreadystatechange = function() {
             if(xhttp4.readyState == 4 && xhttp4.status == 200) {
-                // console.log(xhttp4.responseText)
                 data3 = JSON.parse(xhttp4.responseText);
                 if(data3.Status == 'OK') {
                     $('#calendar').fullCalendar('removeEvents', e_id);
@@ -525,6 +552,9 @@ $(document).ready(function() {
         xhttp4.send(JSON.stringify(data2));
     });
 
+    /**
+     * Google Sync Popover
+     */
     $('#settings').webuiPopover({
             title: '<span style="color: #ff8787">Sync Google Calendar</span>',
             type: 'html',
@@ -538,10 +568,10 @@ $(document).ready(function() {
                     list[i].style.borderColor = '#ff8787';
             }
         });
-
-    // $(document).on("click", "#settings", function() {
-        
-    // });
+    
+    /**
+     * Google Calendar API Implementation
+     */
     $(document).on("click", "#auth-button", function(e) {
         handleAuthClick(e);
     });
@@ -619,6 +649,9 @@ $(document).ready(function() {
             'orderBy': 'startTime'
         });
 
+        /**
+         * Down Syncing Events from the User's Google Calendar
+         */
         request.execute(function(resp) {
             var events = resp.items;
             console.log(events);
@@ -649,7 +682,6 @@ $(document).ready(function() {
                         allDay: all_day,
                         type: 'Google'
                     };
-                    // console.log(local_event);
                     var data = {
                         event_name: event.summary,
                         location: 'Check Description',
@@ -688,7 +720,7 @@ $(document).ready(function() {
                         xhttp3.setRequestHeader('Content-Type', 'application/json');
                         xhttp3.send(JSON.stringify(data));
                     }
-                    // upSyncEvents();
+                    upSyncEvents();
                 }
             } else {
                 console.log('No Events Found');
@@ -696,6 +728,9 @@ $(document).ready(function() {
         });
     }
 
+    /**
+     * Upsyncing Events to the Google Calendar
+     */
     var upSyncEvents = function() {
         var all_events = $('#calendar').fullCalendar('clientEvents', function(event) {
             if(event.type == 'Local')
