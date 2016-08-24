@@ -40,7 +40,8 @@ def create():
             "End": data['end_date'],
             "All_Day": data['all_day'], 
             "Description": data['description'],
-            "Event_ID": data['id']
+            "Event_ID": data['id'],
+            "Type": data['type']
         })
         temp['Status'] = 'OK'
         temp['Message'] = 'Event Added Successfully'

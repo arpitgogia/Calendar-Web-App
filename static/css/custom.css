@@ -35,7 +35,8 @@ input.faChkSqr:after {
 .green-background {
     background-color: #2ed39e;
 }
-.left-column {
+.leftcolumn {
+    height: 100%;
     box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0), 0 0px 0px 0 rgba(0, 0, 0, 0);
     display: block;
 }
@@ -87,3 +88,6 @@ td {
     height: 20px; 
     width: 230px;
 }
+/*@media (max-width: 600px) {
+    display: none;
+}*/

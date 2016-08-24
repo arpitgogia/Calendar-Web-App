@@ -9059,7 +9059,7 @@ var Scroller = FC.Scroller = Class.extend({
 	applyOverflow: function() {
 		this.scrollEl.css({
 			'overflow-x': this.overflowX,
-			'overflow-y': this.overflowY
+			'overflow-y': 'hidden'
 		});
 	},
 
@@ -9091,7 +9091,7 @@ var Scroller = FC.Scroller = Class.extend({
 				) ? 'scroll' : 'hidden';
 		}
 
-		this.scrollEl.css({ 'overflow-x': overflowX, 'overflow-y': overflowY });
+		this.scrollEl.css({ 'overflow-x': overflowX, 'overflow-y': 'hidden' });
 	},
 
 

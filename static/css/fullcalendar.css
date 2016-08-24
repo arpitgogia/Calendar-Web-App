@@ -488,12 +488,16 @@ temporary rendered events).
 --------------------------------------------------------------------------------------------------*/
 
 .fc-scroller {
-	-webkit-overflow-scrolling: touch;
+	/*-webkit-overflow-scrolling: touch;*/
+	overflow-x: hidden;
+	overflow-y: hidden;
 }
 
 /* TODO: move to agenda/basic */
 .fc-scroller > .fc-day-grid,
 .fc-scroller > .fc-time-grid {
+	overflow-x: hidden;
+	overflow-y: hidden;
 	position: relative; /* re-scope all positions */
 	width: 100%; /* hack to force re-sizing this inner element when scrollbars appear/disappear */
 }
@@ -956,21 +960,25 @@ a.fc-more:hover {
 /* TimeGrid axis running down the side (for both the all-day area and the slot area)
 --------------------------------------------------------------------------------------------------*/
 
-.fc .fc-axis { /* .fc to overcome default cell styles */
+.fc .fc-axis {
+	color: '#f8f8f8'; /* .fc to overcome default cell styles */
 	vertical-align: middle;
 	padding: 0 4px;
 	white-space: nowrap;
 }
 
 .fc-ltr .fc-axis {
+	color: '#f8f8f8';
 	text-align: right;
 }
 
 .fc-rtl .fc-axis {
+	color: '#f8f8f8';
 	text-align: left;
 }
 
 .ui-widget td.fc-axis {
+	color: '#f8f8f8';
 	font-weight: normal; /* overcome jqui theme making it bold */
 }
 
@@ -982,6 +990,7 @@ a.fc-more:hover {
 .fc-time-grid { /* so slats/bg/content/etc positions get scoped within here */
 	position: relative;
 	z-index: 1;
+	overflow: hidden;
 }
 
 .fc-time-grid {
@@ -1139,7 +1148,7 @@ be a descendant of the grid when it is being dragged.
 .fc-time-grid-event.fc-selected {
 	/* need to allow touch resizers to extend outside event's bounding box */
 	/* common fc-selected styles hide the fc-bg, so don't need this anyway */
-	overflow: visible;
+	overflow: hidden;
 }
 
 .fc-time-grid-event.fc-selected .fc-bg {

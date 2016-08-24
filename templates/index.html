@@ -2,7 +2,7 @@
 <html lang="en">
     <head> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="google-signin-client_id" content="705643443576-1165m248a282nijuhro785fp3anlidih.apps.googleusercontent.com">
+        <meta name="google-signin-client_id" content="705643443576-m3geh9f5qp4bo6pnseb2c4l25hr5fhqv.apps.googleusercontent.com">
         <title>Calendar</title>
         <link href="../static/css/font-awesome.css" rel="stylesheet">
         <link href="../static/css/custom.css" rel="stylesheet">
@@ -23,7 +23,7 @@
         <script src="../static/js/jquery.simpleWeather.js"></script>
         <script src="../static/js/mprogress.min.js"></script>
         <script src="../static/js/fullcalendar.js"></script>
-        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <script src="https://apis.google.com/js/platform.js"></script>
         <script src="https://apis.google.com/js/client.js?onload=checkAuth"></script>
         <script src="../static/js/bootstrap-editable.min.js"></script>
         <script src="../static/js/bootstrap-datepicker.js"></script>
@@ -33,9 +33,9 @@
         <div id="event_add_modal">
         </div>
         <div class="row">
-            <div class="col-sm-2 green-background container-fluid" style="box-sizing: border-box; overflow: hidden">
-                <div id="left-column" class="card large green-background left-column">
-                    <div class="card green-background left-column">
+            <div class="col-sm-2 green-background container-fluid" style="overflow: hidden">
+                <div id="leftcolumn" class="card green-background leftcolumn">
+                    <div class="card green-background leftcolumn">
                         <button class="btn btn-flat" style="float: left; margin: 10px; display: block; background: inherit" id="sync">
                             <i style="display: block; font-size: 20px;color: white;" class="fa fa-refresh fa-large"></i>
                         </button>
@@ -43,7 +43,7 @@
                             <i style="display: block; font-size: 20px;color: white;" class="fa fa-gear fa-large"></i>
                         </button>
                     </div>
-                    <div class="card green-background left-column" id="datepicker" style="width: inherit"></div>
+                    <div class="card green-background leftcolumn" id="datepicker" style="width: inherit"></div>
                     <script>
                         $(document).ready(function() {
                             $('#datepicker').datepicker({
@@ -57,14 +57,14 @@
                                 list1[i].style.background = 'white';
                         });
                     </script>
-                    <div class="card green-background left-column">
+                    <div class="card green-background leftcolumn">
                         <p id="clock" class="time"></span>
                     </div>
-                    <div id="timeline" class="card green-background left-column" style="margin-bottom: 20px; overflow-x:hidden; overflow-y:hidden">
+                    <div id="timeline" class="card green-background leftcolumn" style="margin-bottom: 20px; overflow-x:hidden; overflow-y:hidden">
                     </div>
                     <div>
                         <div id="progress" class="demo-bar"></div>
-                        <div id="weather" class="card left-column calendar" style="background: rgba(0, 0, 0, 0.1); margin-left: 12px;"></div>
+                        <div id="weather" class="card leftcolumn calendar" style="background: rgba(0, 0, 0, 0.1); margin-left: 12px;"></div>
                     </div>
                 </div>
             </div>
@@ -96,7 +96,7 @@
             <input id="save" value="Save" type="button" style="border-radius: 2px; color: white; margin-right: 2px; background: #ff8787; float: right; width: auto; padding: 5px 30px 5px 30px" class="btn-flat">
         </div>
         <div id="modal_login" style="visibility: hidden">
-            <div id="auth-button" class="g-signin2" data-onsuccess="onSignIn"></div>
+            <button id="auth-button" class="g-signin2" data-onsuccess="onSignIn">Google Sign In</button>
         </div>
     </body>
 </html>

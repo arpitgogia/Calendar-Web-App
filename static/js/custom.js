@@ -1,5 +1,5 @@
 $(document).ready(function() {
-
+    localStorage.setItem('AUTHORIZED', 'false');
     // Width excluding the scroll bars
     var w = window.innerWidth
         || document.documentElement.clientWidth
@@ -20,12 +20,28 @@ $(document).ready(function() {
         return JSON.stringify(params);
     }
     
+    //Random IDGenerator according to Google Specifications
+    var IDGenerator = function() {
+        length = Math.floor(Math.random() * 5 + 24);
+        timestamp = +new Date;
+        var _getRandomInt = function(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        var ts = this.timestamp.toString();
+        var parts = ts.split("").reverse();
+        var id = "";
+        for (var i = 0; i < this.length; ++i) {
+            var index = _getRandomInt(0, parts.length - 1);
+            id += parts[index];
+        }
+        return id;
+    }
 
-    console.log('Hellosss sswe11');
+    console.log(' 123');
     
-    var event_count = localStorage.getItem('calendar_event_count');
-    if(event_count == null)
-        event_count = 0;
+    // var event_count = localStorage.getItem('calendar_event_count');
+    // if(event_count == null)
+    //     event_count = 0;
 
     var d = new Date();
     var month = d.getMonth() + 1;
@@ -93,7 +109,8 @@ $(document).ready(function() {
                         location: events[i].Location,
                         end: events[i].End,
                         description: events[i].Description,
-                        allDay: events[i].All_Day
+                        allDay: events[i].All_Day,
+                        type: events[i].Type
                     }
                     var temp = new moment(event.start);
                     var now = new moment();
@@ -105,10 +122,10 @@ $(document).ready(function() {
                     event_list.push(event);
                 }
             }
-            if(event_list.length == 0) {
-                localStorage.setItem('calendar_event_count', 0);
-                event_count = 0;
-            }
+            // if(event_list.length == 0) {
+            //     localStorage.setItem('calendar_event_count', 0);
+            //     event_count = 0;
+            // }
 
             $('#calendar').fullCalendar({
                 theme: true,
@@ -129,7 +146,6 @@ $(document).ready(function() {
                     $(cell).webuiPopover({
                         title: date2,
                         type: 'html',
-                        position: 'right',
                         content: $('#modal_add').html(),
                         animation: 'fade',
                         closeable: true,
@@ -207,7 +223,6 @@ $(document).ready(function() {
                     $(element).webuiPopover({
                         title: '<span id="title" style="color: #ff8787">' + event.title + '</span>',
                         type: 'html',
-                        position: 'right',
                         content: modal_content.join(""),
                         animation: 'fade',
                         closeable: true,
@@ -266,7 +281,11 @@ $(document).ready(function() {
                             //Start Time
                             $(element).children().children().find('#label_time_start').editable({
                                 type: 'combodate',
+                                value: new Date().toString(),
                                 template: 'D MMM YYYY  HH:mm',
+                                combodate: {
+                                    maxYear: 2017,
+                                },
                                 format: 'YYYY-MM-DDTHH:mm:ss.sssZ',
                                 viewformat: 'k:mm a, dddd, MMM D',
                                 mode: 'inline',
@@ -290,6 +309,9 @@ $(document).ready(function() {
                             $(element).children().children().find('#label_time_end').editable({
                                 type: 'combodate',
                                 template: 'D MMM YYYY  HH:mm',
+                                combodate: {
+                                    maxYear: 2017,
+                                },
                                 format: 'YYYY-MM-DDTHH:mm:ss.sssZ',
                                 viewformat: 'k:mm a, dddd, MMM D',
                                 mode: 'inline',
@@ -349,9 +371,7 @@ $(document).ready(function() {
                 editable: false,
                 allDaySlot: true,
                 events: event_list,
-                viewRender: function(view, element) {
-                    // console.log($(element).children().children().children().children()[1].children);
-                }
+                scrollTime: new Date(),
             })
         }
     };
@@ -359,7 +379,7 @@ $(document).ready(function() {
     xhttp1.send();
     
     //Adjusting the height of the left column.
-    $('#left-column').css('height', h.toString() + "px");
+    // document.getElementById('leftcolumn').style.height = h.toString() + 'px';
     
     //Creating the clock
     // var d = new Date();
@@ -367,6 +387,9 @@ $(document).ready(function() {
     // console.log(d);
     var html = '<big>' + d.slice(0, 5) + '</big>' + '<small><small><small><small>' + d.slice(5) + '</small></small></small></small>'
     $('#clock').html(html);
+
+    //Obtaining the Weather
+    //NOTE: The Weather Icons are provided by the API itself hence, I did not use the Font Awesome Icons.
     var xhttp2 = new XMLHttpRequest();
     xhttp2.onreadystatechange = function() {
         if (xhttp2.readyState == 4 && xhttp2.status == 200) {
@@ -380,19 +403,24 @@ $(document).ready(function() {
     xhttp2.open('GET', "http://api.apixu.com/v1/current.json?key=05fcb9bae03b415baf4145821161708&q=Delhi,IN", true);
     xhttp2.send();
     
+
     var list = document.getElementsByClassName('fc-other-month');
     for(var i = 0 ; i < list.length ; i++) {
         list[i].style.background = '#f8f8f8';
         list[i].style.color = '#b3b3b3';
     }
     
+
     list = document.getElementsByClassName('fc-today');
     for(var i = 0 ; i < list.length ; i++) {
         list[i].style.background = '#2ed39e';
         list[i].style.color = '#f8f8f8';
     }
 
-    $('.fc-day-number').css('text-align', 'left');
+
+    list = document.getElementsByClassName('fc-day-number');
+    for(var i = 0 ; i < list.length ; i++) 
+        list[i].style.textAlign = 'left';
     list = document.getElementsByTagName('td');
 
     //Saving an event
@@ -423,7 +451,7 @@ $(document).ready(function() {
         console.log(start_date);
         console.log(end_date);
         console.log(all_day);
-        
+        var id = IDGenerator();
         var event = {
             title: event_name,
             allDay: all_day,
@@ -431,7 +459,8 @@ $(document).ready(function() {
             end: end_date,
             description: description,
             location: location,
-            id: event_count
+            id: id,
+            type: 'Local'
         };
 
         var data = {
@@ -441,38 +470,39 @@ $(document).ready(function() {
             end_date: end_date,
             all_day: all_day,
             description: description,
-            id: event_count
+            id: id,
+            type: 'Local'
         };
 
-        xhttp3 = new XMLHttpRequest();
-        xhttp3.onreadystatechange = function() {
-            if (xhttp3.readyState == 4 && xhttp3.status == 200) {
-                data = JSON.parse(xhttp3.responseText);
-                if(data.Status == 'OK') {
-                    var temp = new moment(event.start);
-                    var now = new moment();
-                    if(now.date() == temp.date() && now.month() == temp.month() && now.year() == temp.year()) {
-                        event.backgroundColor = '#f8f8f8';
-                        event.textColor = '#2ed39e';
-                    }
-                    $('#calendar').fullCalendar('renderEvent', event, true);
-                    $('#timeline').fullCalendar('renderEvent', event, true);
-                    event_count = parseInt(event_count) + 1;
-                    localStorage.setItem('calendar_event_count', event_count);
-                    WebuiPopovers.hideAll();
-                } else {
-                    alert(data.Message);
-                }
-            }
-        };
-        xhttp3.open('POST', '/create');
-        xhttp3.setRequestHeader('Content-Type', 'application/json');
-        xhttp3.send(JSON.stringify(data));
+        // xhttp3 = new XMLHttpRequest();
+        // xhttp3.onreadystatechange = function() {
+        //     if (xhttp3.readyState == 4 && xhttp3.status == 200) {
+        //         data = JSON.parse(xhttp3.responseText);
+        //         if(data.Status == 'OK') {
+        //             var temp = new moment(event.start);
+        //             var now = new moment();
+        //             if(now.date() == temp.date() && now.month() == temp.month() && now.year() == temp.year()) {
+        //                 event.backgroundColor = '#f8f8f8';
+        //                 event.textColor = '#2ed39e';
+        //             }
+        //             $('#calendar').fullCalendar('renderEvent', event, true);
+        //             $('#timeline').fullCalendar('renderEvent', event, true);
+        //             // event_count = parseInt(event_count) + 1;
+        //             // localStorage.setItem('calendar_event_count', event_count);
+        //             WebuiPopovers.hideAll();
+        //         } else {
+        //             alert(data.Message);
+        //         }
+        //     }
+        // };
+        // xhttp3.open('POST', '/create');
+        // xhttp3.setRequestHeader('Content-Type', 'application/json');
+        // xhttp3.send(JSON.stringify(data));
     });
 
 
     $(document).on("click", "#delete", function() {
-        var e_id = parseInt($(this).parent().find('#event_id').html());
+        var e_id = $(this).parent().find('#event_id').html();
         console.log(e_id);
         var data2 = {
             id: e_id
@@ -495,9 +525,7 @@ $(document).ready(function() {
         xhttp4.send(JSON.stringify(data2));
     });
 
-
-    $(document).on("click", "#settings", function() {
-        $(this).webuiPopover({
+    $('#settings').webuiPopover({
             title: '<span style="color: #ff8787">Sync Google Calendar</span>',
             type: 'html',
             position: 'right',
@@ -510,14 +538,17 @@ $(document).ready(function() {
                     list[i].style.borderColor = '#ff8787';
             }
         });
-    });
+
+    // $(document).on("click", "#settings", function() {
+        
+    // });
     $(document).on("click", "#auth-button", function(e) {
         handleAuthClick(e);
     });
     $(document).on("click", "#sync", function(e) {
         loadCalendarApi();
     });
-    var CLIENT_ID = '705643443576-1geno5j828oflrhsefln11bl0k0n00g7.apps.googleusercontent.com';
+    var CLIENT_ID = '705643443576-m3geh9f5qp4bo6pnseb2c4l25hr5fhqv.apps.googleusercontent.com';
     var SCOPES = ["https://www.googleapis.com/auth/calendar"];
 
     /**
@@ -540,7 +571,7 @@ $(document).ready(function() {
         // var authorizeDiv = document.getElementById('authorize-div');
         if (authResult && !authResult.error) {
             // authorizeDiv.style.display = 'none';
-            localStorage.setItem('AUTHORIZED', true);
+            localStorage.setItem('AUTHORIZED', 'true');
         } else {
             // authorizeDiv.style.display = 'inline';
         }
@@ -566,11 +597,11 @@ $(document).ready(function() {
     * once client library is loaded.
     */
     function loadCalendarApi() {
-        // console.log(localStorage.getItem('AUTHORIZED'));
-        // if(localStorage.getItem('AUTHORIZED') == true)
+        console.log(localStorage.getItem('AUTHORIZED'));
+        if(localStorage.getItem('AUTHORIZED') == 'true')
             gapi.client.load('calendar', 'v3', listUpcomingEvents);
-        // else
-            // alert('Not Signed Into Google');
+        else
+            alert('Not Signed Into Google');
     }
 
     /**
@@ -590,12 +621,11 @@ $(document).ready(function() {
 
         request.execute(function(resp) {
             var events = resp.items;
+            console.log(events);
             if (events.length > 0) {
-                var event_count = localStorage.getItem('calendar_event_count');
-                if(event_count == null)
-                    event_count = 0;
                 for (i = 0; i < events.length; i++) {
                     var event = events[i];
+                    // console.log(event);
                     var start_date_time = null;
                     var end_date_time = null;
                     var all_day = false;
@@ -614,9 +644,10 @@ $(document).ready(function() {
                         end: end_date_time,
                         location: 'Check Description',
                         description: '<a href="' + event.htmlLink + '"> Link <i class="fa fa-external-link"></i></a>',
-                        id: event_count,
+                        id: event.id,
                         title: event.summary,
-                        allDay: all_day
+                        allDay: all_day,
+                        type: 'Google'
                     };
                     // console.log(local_event);
                     var data = {
@@ -626,36 +657,74 @@ $(document).ready(function() {
                         end_date: end_date_time,
                         all_day: all_day,
                         description: '<a href="' + event.htmlLink + '"> Link <i class="fa fa-external-link"></i></a>',
-                        id: event_count
+                        id: event.id,
+                        type: 'Google'
                     };
-                    xhttp3 = new XMLHttpRequest();
-                    xhttp3.onreadystatechange = function() {
-                        if (xhttp3.readyState == 4 && xhttp3.status == 200) {
-                            data = JSON.parse(xhttp3.responseText);
-                            if(data.Status == 'OK') {
-                                console.log("Successful");
-                                var temp = new moment(local_event.start);
-                                var now = new moment();
-                                if(now.date() == temp.date() && now.month() == temp.month() && now.year() == temp.year()) {
-                                    local_event.backgroundColor = '#f8f8f8';
-                                    local_event.textColor = '#2ed39e';
+                    var all_events = $('#calendar').fullCalendar('clientEvents', local_event.id);
+                    console.log(all_events);
+                    if(all_events.length == 0) {    
+                        xhttp3 = new XMLHttpRequest();
+                        xhttp3.onreadystatechange = function() {
+                            if (xhttp3.readyState == 4 && xhttp3.status == 200) {
+                                data = JSON.parse(xhttp3.responseText);
+                                if(data.Status == 'OK') {
+                                    console.log("Successful");
+                                    var temp = new moment(local_event.start);
+                                    var now = new moment();
+                                    if(now.date() == temp.date() && now.month() == temp.month() && now.year() == temp.year()) {
+                                        local_event.backgroundColor = '#f8f8f8';
+                                        local_event.textColor = '#2ed39e';
+                                    }
+                                    $('#calendar').fullCalendar('renderEvent', local_event, true);
+                                    $('#timeline').fullCalendar('renderEvent', local_event, true);
+                                    // event_count = parseInt(event_count) + 1;
+                                    // localStorage.setItem('calendar_event_count', event_count);
+                                } else {
+                                    alert(data.Message);
                                 }
-                                $('#calendar').fullCalendar('renderEvent', local_event, true);
-                                $('#timeline').fullCalendar('renderEvent', local_event, true);
-                                event_count = parseInt(event_count) + 1;
-                                localStorage.setItem('calendar_event_count', event_count);
-                            } else {
-                                alert(data.Message);
                             }
-                        }
-                    };
-                    xhttp3.open('POST', '/create');
-                    xhttp3.setRequestHeader('Content-Type', 'application/json');
-                    xhttp3.send(JSON.stringify(data));
+                        };
+                        xhttp3.open('POST', '/create');
+                        xhttp3.setRequestHeader('Content-Type', 'application/json');
+                        xhttp3.send(JSON.stringify(data));
+                    }
+                    // upSyncEvents();
                 }
             } else {
-                appendPre('No upcoming events found.');
+                console.log('No Events Found');
             }
         });
+    }
+
+    var upSyncEvents = function() {
+        var all_events = $('#calendar').fullCalendar('clientEvents', function(event) {
+            if(event.type == 'Local')
+                return true;
+            else
+                return false;
+        });
+        for(var i = 0 ; i < all_events.length ; i++) {
+            var local_event = all_events[i];
+            var event = {
+                'summary': local_event.title,
+                'description': local_event.description,
+                'start': {
+                    'dateTime': local_event.start,
+                    'timeZone': 'India/Kolkata'
+                },
+                'end': {
+                    'dateTime': local_event.end,
+                    'timeZone': 'India/Kolkata'
+                },
+                'id': local_event.id
+            }
+            var request = gapi.client.calendar.events.insert({
+                'calendarId': 'primary',
+                'resource': event
+            })
+            request.execute(function(event) {
+                console.log('Event Created ' + event.htmlLink);
+            })
+        }
     }
 });
