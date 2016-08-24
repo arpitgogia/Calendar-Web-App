@@ -389,7 +389,7 @@ $(document).ready(function() {
                 allDaySlot: true,
                 events: event_list,
                 scrollTime: scroll_time,
-                minTime: scroll_time
+                minTime: scroll_time,
             })
         }
     };

@@ -125,4 +125,4 @@ def update():
     return resp
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False, port=5000, host='127.0.0.1')

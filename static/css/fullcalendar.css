@@ -490,14 +490,14 @@ temporary rendered events).
 .fc-scroller {
 	/*-webkit-overflow-scrolling: touch;*/
 	overflow-x: hidden;
-	overflow-y: hidden;
+	overflow-y: scroll;
 }
 
 /* TODO: move to agenda/basic */
 .fc-scroller > .fc-day-grid,
 .fc-scroller > .fc-time-grid {
 	overflow-x: hidden;
-	overflow-y: hidden;
+	overflow-y: scroll;
 	position: relative; /* re-scope all positions */
 	width: 100%; /* hack to force re-sizing this inner element when scrollbars appear/disappear */
 }
@@ -710,7 +710,7 @@ be a descendant of the grid when it is being dragged.
 
 .fc-day-grid-event .fc-content { /* force events to be one-line tall */
 	white-space: nowrap;
-	overflow: hidden;
+	overflow: scroll;
 }
 
 .fc-day-grid-event .fc-time {
@@ -990,7 +990,7 @@ a.fc-more:hover {
 .fc-time-grid { /* so slats/bg/content/etc positions get scoped within here */
 	position: relative;
 	z-index: 1;
-	overflow: hidden;
+	overflow: scroll;
 }
 
 .fc-time-grid {
@@ -1142,13 +1142,13 @@ be a descendant of the grid when it is being dragged.
 */
 
 .fc-time-grid-event {
-	overflow: hidden; /* don't let the bg flow over rounded corners */
+	overflow: scroll; /* don't let the bg flow over rounded corners */
 }
 
 .fc-time-grid-event.fc-selected {
 	/* need to allow touch resizers to extend outside event's bounding box */
 	/* common fc-selected styles hide the fc-bg, so don't need this anyway */
-	overflow: hidden;
+	overflow: scroll;
 }
 
 .fc-time-grid-event.fc-selected .fc-bg {
@@ -1156,7 +1156,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .fc-time-grid-event .fc-content {
-	overflow: hidden; /* for when .fc-selected */
+	overflow: scroll; /* for when .fc-selected */
 }
 
 .fc-time-grid-event .fc-time,
@@ -1207,7 +1207,7 @@ be a descendant of the grid when it is being dragged.
 	right: 0;
 	bottom: 0;
 	height: 8px;
-	overflow: hidden;
+	overflow: scroll;
 	line-height: 8px;
 	font-size: 11px;
 	font-family: monospace;
