@@ -13,7 +13,6 @@
         <link href="../static/css/bootstrap-datepicker.css" rel="stylesheet">
         <link href="../static/css/bootstrap-datetimepicker.css" rel="stylesheet">
         <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
-        
     </head>
     <body>
         <script src="../static/js/jquery-3.1.0.min.js"></script>
@@ -32,47 +31,48 @@
         <script src="../static/js/custom.js"></script>        
         <div id="event_add_modal">
         </div>
-        <div class="row">
-            <div class="col-sm-2 green-background container-fluid" style="overflow: hidden">
-                <div id="leftcolumn" class="card green-background leftcolumn">
-                    <div class="card green-background leftcolumn">
-                        <button class="btn btn-flat" style="float: left; margin: 10px; display: block; background: inherit" id="sync">
-                            <i style="display: block; font-size: 20px;color: white;" class="fa fa-refresh fa-large"></i>
-                        </button>
-                        <button class="btn btn-flat" style="float: right; margin: 10px; display: block; background: inherit" id="settings">
-                            <i style="display: block; font-size: 20px;color: white;" class="fa fa-gear fa-large"></i>
-                        </button>
-                    </div>
-                    <div class="card green-background leftcolumn" id="datepicker" style="width: inherit"></div>
-                    <script>
-                        $(document).ready(function() {
-                            $('#datepicker').datepicker({
-                                show: function() {
-                                    // $(this).unbind('mouseenter mouseleave');
-                                    $(this).attr('onmousehover', '');
-                                }
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-lg-2 green-background">
+                    <div id="leftcolumn" class="green-background">
+                        <div class="green-background">
+                            <button class="btn btn-flat" style="float: left; margin: 10px; display: block; background: inherit" id="sync">
+                                <i style="display: block; font-size: 20px;color: white;" class="fa fa-refresh fa-large"></i>
+                            </button>
+                            <button class="btn btn-flat" style="float: right; margin: 10px; display: block; background: inherit" id="settings">
+                                <i style="display: block; font-size: 20px;color: white;" class="fa fa-gear fa-large"></i>
+                            </button>
+                        </div>
+                        <div class="green-background" id="datepicker" style="margin-right: 15px;"></div>
+                        <script>
+                            $(document).ready(function() {
+                                $('#datepicker').datepicker({
+                                    show: function() {
+                                        $(this).attr('onmousehover', '');
+                                    }
+                                });
+                                var list1 = document.getElementsByClassName('today');
+                                for(var i = 0 ; i < list1.length ; i++)
+                                    list1[i].style.background = 'white';
                             });
-                            var list1 = document.getElementsByClassName('today');
-                            for(var i = 0 ; i < list1.length ; i++)
-                                list1[i].style.background = 'white';
-                        });
-                    </script>
-                    <div class="card green-background leftcolumn">
-                        <p id="clock" class="time"></span>
-                    </div>
-                    <div id="timeline" class="card green-background leftcolumn" style="margin-bottom: 20px; overflow-x:hidden; overflow-y:hidden">
-                    </div>
-                    <div>
-                        <div id="progress" class="demo-bar"></div>
-                        <div id="weather" class="card leftcolumn calendar" style="background: rgba(0, 0, 0, 0.1); margin-left: 12px;"></div>
+                        </script>
+                        <div class="green-background">
+                            <p id="clock" class="time"></p>
+                        </div>
+                        <div id="timeline" class="green-background leftcolumn" style="margin-bottom: 50px; overflow-x:hidden; overflow-y:hidden">
+                        </div>
+                        <div>
+                            <div id="progress" class="demo-bar"></div>
+                            <div id="weather" class="leftcolumn calendar" style="background: rgba(0, 0, 0, 0.1); margin-left: 12px; margin-bottom: 50px"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-10 container-fluid" style="max-height: 100%; overflow: hidden">
-                <div id="calendar" style="max-height: 100%; max-width: 100%; overflow: hidden"></div>
+                <div class="col-lg-10">
+                    <div id="calendar"></div>
+                </div>
             </div>
         </div>
-        <div id="modal_add" class="modal" style="overflow: auto; padding: 10px; border: solid; border-color: #ff8787; width: 260px; height: auto">
+        <div id="modal_add" class="modal" style="top: 10%; overflow: auto; padding: 10px; border: solid; border-color: #ff8787; width: 260px; height: auto">
             <input id="event_name" type="text" style="padding: 5px; margin-bottom: 10px; border: solid 1px; border-color: grey; height: 30px; width: 230px;" placeholder="Event Name">
             <br>
             <input id="location" type="text" style="padding: 5px; margin-bottom: 10px; border: solid 1px; border-color: grey; height: 20px; width: 230px;" placeholder="Location">

@@ -9059,7 +9059,7 @@ var Scroller = FC.Scroller = Class.extend({
 	applyOverflow: function() {
 		this.scrollEl.css({
 			'overflow-x': this.overflowX,
-			'overflow-y': 'hidden'
+			'overflow-y': this.overflowY
 		});
 	},
 

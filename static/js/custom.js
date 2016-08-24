@@ -159,6 +159,7 @@ $(document).ready(function() {
                     $(cell).webuiPopover({
                         title: date2,
                         type: 'html',
+                        position: 'bottom-right',   
                         content: $('#modal_add').html(),
                         animation: 'fade',
                         closeable: true,
@@ -373,6 +374,9 @@ $(document).ready(function() {
                     });
                 }
             });
+            var scroll_time = formatDate(new Date());
+            scroll_time = scroll_time.slice(scroll_time.indexOf('T'), scroll_time.indexOf('.'));
+            console.log(scroll_time);
             $('#timeline').fullCalendar({
                 defaultView: 'agendaDay',
                 header: {
@@ -384,20 +388,16 @@ $(document).ready(function() {
                 editable: false,
                 allDaySlot: true,
                 events: event_list,
-                scrollTime: new Date(),
+                scrollTime: scroll_time,
+                minTime: scroll_time
             })
         }
     };
     xhttp1.open('GET', "/get_events", true);
     xhttp1.send();
     
-    //Adjusting the height of the left column.
-    // document.getElementById('leftcolumn').style.height = h.toString() + 'px';
-    
     //Creating the clock
-    // var d = new Date();
     var d = moment().format('h:mm a');
-    // console.log(d);
     var html = '<big>' + d.slice(0, 5) + '</big>' + '<small><small><small><small>' + d.slice(5) + '</small></small></small></small>'
     $('#clock').html(html);
 
